@@ -1,0 +1,443 @@
+import { BroadcastChannel } from 'broadcast-channel'
+import { v4 as uuid } from 'uuid'
+import { TinyEmitter } from 'tiny-emitter'
+import assign from 'object-assign'
+import { assert } from './assert'
+import { InvokeError, MessageError, MessageTimeoutError } from './errors'
+import { ShimoMessageEvent, isShimoMessageEventLike, MessageEventOptions } from './message-event'
+import debug, { enableDebug, disableDebug } from './debug'
+
+export const INVOKE_DEFAUTL_TIMEOUT = 60000
+
+export default class ShimoBroadcastChannel {
+  readonly id: string
+
+  private readonly channel: BroadcastChannel
+
+  private readonly emitter: TinyEmitter
+
+  private readonly invokeHandlers: Map<string, InvokeInternalHandler[]> = new Map()
+
+  private readonly eventHandlers: Map<string, Array<[EventHandler<unknown>, Context?]>> = new Map()
+
+  private readonly emitterId = uuid()
+
+  constructor (options: Options) {
+    if (options.debug === true) {
+      enableDebug()
+    } else if (options.debug === false) {
+      disableDebug()
+    }
+
+    Object.defineProperty(this, 'id', {
+      enumerable: true,
+      value: typeof options.channelId === 'string'
+        ? assert<string>(options.channelId.trim(), (id: string) => id.length > 0, 'channelId must be a non-empty string')
+        : uuid()
+    })
+
+    this.emitter = new TinyEmitter()
+
+    const channel = new BroadcastChannel(this.id)
+    channel.addEventListener('message', evt => {
+      (async () => {
+        let data: ShimoMessageEvent
+
+        try {
+          data = this.initMessageEvent(evt)
+        } catch (e) {
+          const err = new MessageError(e?.message ?? 'message cannot be handled')
+          err.originMessage = evt.data
+          this.emit('messageError', err)
+          return
+        }
+
+        await this.distributeMessage(data)
+      })()
+        .catch(async err => {
+          this.emit('error', err)
+        })
+    })
+
+    this.channel = channel
+  }
+
+  private initMessageEvent (input: {
+    data: unknown
+    context?: Context
+    time?: number
+    origin?: string
+  } | ShimoMessageEvent): ShimoMessageEvent {
+    const payload: MessageEventOptions = assign(assign({ emitter: this.emitterId }, input, { channelId: this.id }))
+
+    if (typeof payload.origin !== 'string') {
+      payload.origin = location.origin
+    }
+
+    return new ShimoMessageEvent(payload)
+  }
+
+  private addEventListener (name: string, listener: EventHandler<unknown>, context?: Context): void {
+    let evts = this.eventHandlers.get(name)
+    if (!Array.isArray(evts)) {
+      evts = []
+    }
+    evts.push([listener, context])
+    this.eventHandlers.set(name, evts)
+  }
+
+  /**
+   * 监听事件
+   *
+   * @param name 事件名称
+   * @param listener 监听器
+   * @param context 监听的消息的上下文，传了则只会收到相同上下文 audience 的消息
+   */
+  on<Name extends keyof Events>(name: Name, listener: EventHandler<Events[Name]>, context?: Context): OffEventCallback {
+    this.addEventListener(name, listener, context)
+
+    return () => {
+      this.off(name, listener, context)
+    }
+  }
+
+  /**
+   * 监听事件，触发一次后自动会 off
+   *
+   * @param name 事件名称
+   * @param listener 监听器
+   * @param context 监听的消息的上下文，传了则只会收到相同上下文 audience 的消息
+   */
+  once<Name extends keyof Events>(name: Name, listener: EventHandler<Events[Name]>, context?: Context): OffEventCallback {
+    const cb: OnceHandler = (payload: Events[Name], context?: Context) => {
+      this.off(name, listener, context)
+      listener(payload, context)
+    }
+    cb.handler = listener
+
+    this.addEventListener(name, cb, context)
+
+    return () => {
+      this.off(name, listener, context)
+    }
+  }
+
+  /**
+   * 取消事件监听
+   *
+   * @param name 事件名称
+   * @param listener 监听器，不传则取消所有监听器
+   * @param context 监听的消息的上下文，传了则只取消相同上下文 audience 的监听器
+   */
+  off<Name extends keyof Events>(name: Name, listener?: EventHandler<Events[Name]>, context?: Context): void {
+    if (arguments.length === 1) {
+      this.eventHandlers.delete(name)
+    } else {
+      const evts = this.eventHandlers.get(name)
+
+      if (Array.isArray(evts)) {
+        this.eventHandlers.set(name, evts.filter(([_listener, ctx]) => {
+          return (_listener !== listener && (_listener as OnceHandler).handler !== listener) ||
+        (ctx?.audience === context?.audience)
+        }))
+      }
+    }
+  }
+
+  emit<Name extends keyof Events>(name: Name, data: Events[Name], context?: Context): void {
+    debug('emitting event', name, data, context)
+
+    const evts = this.eventHandlers.get(name)
+    if (Array.isArray(evts)) {
+      for (const [listener, ctx] of evts) {
+        if (ctx?.audience === context?.audience) {
+          listener(data, context)
+        }
+      }
+    }
+  }
+
+  /**
+   * 发出一条消息到 channel
+   *
+   * @param message 消息
+   * @param context 消息的上下文，传了则只有相同上下文 audience 的监听器才能收到消息
+   */
+  async postMessage (message: unknown, context?: Context): Promise<void> {
+    debug('pre postMessage', { message, context })
+
+    let data: ShimoMessageEvent
+
+    try {
+      if (isShimoMessageEventLike(message)) {
+        data = this.initMessageEvent(message as ShimoMessageEvent)
+      } else {
+        data = this.initMessageEvent({
+          data: message,
+          context
+        })
+      }
+    } catch (e) {
+      debug('message invalid', e)
+
+      const err = new MessageError(e?.message)
+      err.originMessage = message
+      throw err
+    }
+
+    try {
+      await this.channel.postMessage(data)
+
+      this.emit('postMessage', data)
+
+      debug('postMessage success', data)
+    } catch (e) {
+      debug('post message error', e)
+
+      const err = new MessageError(e?.message)
+      err.originMessage = message
+      throw err
+    }
+  }
+
+  /**
+   * 在当前 channel 实例里分发消息，不会分发到其它 channel 实例。
+   * 用于类似 cross-origin iframe 之间的通信。
+   *
+   * @param messageEvent 消息
+   */
+  async distributeMessage (messageEvent: ShimoMessageEvent): Promise<void> {
+    if (messageEvent.context?.channelId !== this.id || messageEvent.emitter === this.emitterId) {
+      debug('discarding message', messageEvent)
+      return
+    }
+
+    debug('delivering message', messageEvent)
+
+    if (messageEvent.context?.type === ContextType.InvokeRequest) {
+      await this.handleInvokeRequest(messageEvent)
+      return
+    }
+
+    if (messageEvent.context?.type === ContextType.InvokeResponse) {
+      this.handleInvokeResponse(messageEvent)
+      return
+    }
+
+    this.emit('message', messageEvent, messageEvent.context)
+  }
+
+  private async handleInvokeRequest (messageEvent: ShimoMessageEvent): Promise<void> {
+    debug('handle invoke request', messageEvent)
+
+    const { name, args } = messageEvent.data as InvokeData
+    const ctx = messageEvent.context
+
+    const items = this.invokeHandlers.get(name)
+    if (!Array.isArray(items)) {
+      debug('no invoke handlers', name)
+      return
+    }
+
+    for (const item of items) {
+      if (item.context?.audience !== ctx.audience) {
+        continue
+      }
+
+      const data: { result?: unknown, error?: Error } = {}
+
+      try {
+        data.result = await item.handler(...args)
+      } catch (e) {
+        data.error = e
+      }
+
+      await this.postMessage(
+        data,
+        assign({}, ctx, { type: ContextType.InvokeResponse })
+      )
+
+      // Invoke 请求只处理第一个匹配的 handler
+      return
+    }
+
+    debug('no invoke handler found', name)
+  }
+
+  private handleInvokeResponse (messageEvent: ShimoMessageEvent): void {
+    debug('handle invoke response', messageEvent)
+
+    if (typeof messageEvent.id !== 'string') {
+      throw new InvokeError('Invoke response context id is invalid')
+    }
+
+    this.emitter.emit(messageEvent.id, messageEvent.data)
+  }
+
+  /**
+   * 发出一条 Invoke 消息，并等待返回结果
+   * Invoke 消息并不会被监听，只会被发送到 channel 中通过 addInvokeHandler 添加的 handler 中。
+   *
+   * @parma name 方法名
+   * @param args 参数列表
+   * @param context 消息上下文
+   */
+  async invoke<T>(name: string, args: unknown[], context?: Context): Promise<T> {
+    const data = {
+      name,
+      args
+    }
+
+    const timeout = typeof context?.timeout === 'number' && context?.timeout > 0 ? context?.timeout : INVOKE_DEFAUTL_TIMEOUT
+    const ctxId = uuid()
+
+    const p = new Promise<T>((resolve, reject) => {
+      this.emitter.once(ctxId, (data: {
+        result: T
+        error?: Error | string
+      }) => {
+        if (data.error instanceof InvokeError) {
+          reject(data.error)
+        } else if (data.error != null) {
+          // Firefox 暂不支持通过 postMessage 传递 Error 对象
+          const err = new InvokeError(typeof data.error === 'string' ? data.error : data.error.message)
+          err.method = name
+          err.arguments = args
+          reject(err)
+        } else {
+          resolve(data.result)
+        }
+      })
+
+      setTimeout(() => {
+        this.emitter.off(ctxId)
+        reject(new MessageTimeoutError(`${name} invoke timeout`))
+      }, timeout)
+    })
+
+    await this.postMessage(
+      data,
+      assign({}, context, { messageId: ctxId, timeout, type: ContextType.InvokeRequest })
+    )
+
+    const result = await p
+
+    if (result instanceof Error) {
+      throw result
+    }
+
+    return result
+  }
+
+  addInvokeHandler (name: string, handler: InvokeHandler, context?: Context): void {
+    let items: InvokeInternalHandler[] | undefined = this.invokeHandlers.get(name)
+    if (!Array.isArray(items)) {
+      items = []
+    }
+    items.push({ handler, context })
+    this.invokeHandlers.set(name, items)
+  }
+
+  removeInvokeHandler (name: string, handler: InvokeHandler, context?: Context): void {
+    const items = this.invokeHandlers.get(name)
+    if (Array.isArray(items)) {
+      this.invokeHandlers.set(name, items.filter(item => {
+        return item.handler !== handler || item.context?.audience !== context?.audience
+      }))
+    }
+  }
+}
+
+/**
+ * 用于发送消息的 poster，在 `channel.postMessage()` 时会调用，用于实现 cross-origin iframe 通信功能。
+ */
+export type MessagePoster = (message: ShimoMessageEvent) => void
+
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+export type Events = {
+  /**
+   * postMessage 事件，当消息通过 channel 发出后，会触发
+   */
+  postMessage: ShimoMessageEvent
+
+  /**
+   * Channel 收到消息时触发的事件
+   */
+  message: ShimoMessageEvent
+
+  /**
+   * 当 channel 收到无法处理的消息时触发的事件
+   */
+  messageError: MessageError
+
+  error: MessageError
+
+  invokeResponse: unknown
+}
+
+export type EventHandler<T = unknown> = (payload: T, context?: Context) => void
+
+interface OnceHandler {
+  (payload: unknown, context?: Context): void
+  handler: EventHandler
+}
+
+export type OffEventCallback = () => void
+
+export type InvokeHandler = (...args: unknown[]) => Promise<void>
+
+interface InvokeInternalHandler {
+  handler: InvokeHandler
+  context?: Context
+}
+
+interface InvokeData {
+  name: string
+  args: unknown[]
+}
+
+export interface Options {
+  channelId?: string
+
+  debug?: boolean
+}
+
+/**
+ * 消息上下文。
+ * 如果在绑定 listener 时指定了 context，
+ * 则只有收到的消息的 context.audience 和 listener 的 context.audience 匹配才会将消息传递给 listener。
+ */
+export interface Context {
+  /**
+   * 对应的频道 ID。
+   */
+  channelId: string
+
+  /**
+   * 消息的唯一 ID。
+   */
+  messageId: string
+
+  /**
+   * 消息的受众，会和 listener 的 context.audience 对比。
+   */
+  audience?: string
+
+  /**
+   * 在 Invoke 过程中，多少 ms 之后，仍未收到结果，就会抛出 MessageTimeoutError。
+   */
+  timeout?: number
+
+  /**
+   * 消息的类型。
+   */
+  type?: ContextType
+
+  [key: string]: unknown
+}
+
+export enum ContextType {
+  InvokeRequest,
+
+  InvokeResponse
+}

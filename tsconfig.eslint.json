@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "declaration": false,
+    "module": "es6",
+    "target": "es6"
+  },
+  "include": ["./src/**/*", "webpack.config.ts"]
+}
