@@ -4,26 +4,211 @@
 
 ## Table of contents
 
+### Enumerations
+
+- [ContextType](enums/ContextType.md)
+
+### Classes
+
+- [InvokeError](classes/InvokeError.md)
+- [MessageError](classes/MessageError.md)
+- [MessageTimeoutError](classes/MessageTimeoutError.md)
+- [ShimoBroadcastChannel](classes/ShimoBroadcastChannel.md)
+
+### Interfaces
+
+- [Context](interfaces/Context.md)
+- [Options](interfaces/Options.md)
+
+### Type aliases
+
+- [EventHandler](modules.md#eventhandler)
+- [Events](modules.md#events)
+- [InvokeHandler](modules.md#invokehandler)
+- [MessagePoster](modules.md#messageposter)
+- [OffEventCallback](modules.md#offeventcallback)
+
+### Variables
+
+- [DEBUG\_NAMESPACE](modules.md#debug_namespace)
+- [INVOKE\_DEFAUTL\_TIMEOUT](modules.md#invoke_defautl_timeout)
+- [SOURCE\_NAMESPACE](modules.md#source_namespace)
+
 ### Functions
 
-- [default](modules.md#default)
+- [structuredClone](modules.md#structuredclone)
+
+## Type aliases
+
+### EventHandler
+
+Ƭ **EventHandler**<`T`\>: (`payload`: `T`, `context?`: [`Context`](interfaces/Context.md)) => `void`
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | `unknown` |
+
+#### Type declaration
+
+▸ (`payload`, `context?`): `void`
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `payload` | `T` |
+| `context?` | [`Context`](interfaces/Context.md) |
+
+##### Returns
+
+`void`
+
+#### Defined in
+
+src/shimo-broadcast-channel.ts:378
+
+___
+
+### Events
+
+Ƭ **Events**: `Object`
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `error` | [`MessageError`](classes/MessageError.md) | - |
+| `invokeResponse` | `unknown` | - |
+| `message` | `ShimoMessageEvent` | Channel 收到消息时触发的事件 |
+| `messageError` | [`MessageError`](classes/MessageError.md) | 当 channel 收到无法处理的消息时触发的事件 |
+| `postMessage` | `ShimoMessageEvent` | postMessage 事件，当消息通过 channel 发出后，会触发 |
+
+#### Defined in
+
+src/shimo-broadcast-channel.ts:357
+
+___
+
+### InvokeHandler
+
+Ƭ **InvokeHandler**: (...`args`: `unknown`[]) => `Promise`<`void`\>
+
+#### Type declaration
+
+▸ (...`args`): `Promise`<`void`\>
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `...args` | `unknown`[] |
+
+##### Returns
+
+`Promise`<`void`\>
+
+#### Defined in
+
+src/shimo-broadcast-channel.ts:387
+
+___
+
+### MessagePoster
+
+Ƭ **MessagePoster**: (`message`: `ShimoMessageEvent`) => `void`
+
+#### Type declaration
+
+▸ (`message`): `void`
+
+用于发送消息的 poster，在 `channel.postMessage()` 时会调用，用于实现 cross-origin iframe 通信功能。
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `message` | `ShimoMessageEvent` |
+
+##### Returns
+
+`void`
+
+#### Defined in
+
+src/shimo-broadcast-channel.ts:354
+
+___
+
+### OffEventCallback
+
+Ƭ **OffEventCallback**: () => `void`
+
+#### Type declaration
+
+▸ (): `void`
+
+##### Returns
+
+`void`
+
+#### Defined in
+
+src/shimo-broadcast-channel.ts:385
+
+## Variables
+
+### DEBUG\_NAMESPACE
+
+• `Const` **DEBUG\_NAMESPACE**: ``"SM_CHANNEL"``
+
+#### Defined in
+
+src/debug.ts:3
+
+___
+
+### INVOKE\_DEFAUTL\_TIMEOUT
+
+• `Const` **INVOKE\_DEFAUTL\_TIMEOUT**: ``60000``
+
+#### Defined in
+
+src/shimo-broadcast-channel.ts:10
+
+___
+
+### SOURCE\_NAMESPACE
+
+• `Const` **SOURCE\_NAMESPACE**: ``"ShimoBroadcastChannel"``
+
+#### Defined in
+
+src/constants.ts:1
 
 ## Functions
 
-### default
+### structuredClone
 
-▸ **default**(`items`): `Promise`<`string`\>
+▸ **structuredClone**(`value`, `options?`): `unknown`
+
+Opinionated structuredClone() method. Transferring values are not supported for now.
+
+https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `items` | `Promise`<`string`\>[] |
+| `value` | `unknown` |
+| `options` | `Object` |
+| `options.replacer?` | (`value`: `unknown`) => `unknown` |
 
 #### Returns
 
-`Promise`<`string`\>
+`unknown`
 
 #### Defined in
 
-index.ts:1
+src/structured-clone.ts:17
