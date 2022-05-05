@@ -17,7 +17,7 @@
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:400
+src/shimo-broadcast-channel.ts:424
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:402
+src/shimo-broadcast-channel.ts:426

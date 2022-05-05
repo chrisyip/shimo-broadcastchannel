@@ -27,6 +27,7 @@
 - [InvokeHandler](modules.md#invokehandler)
 - [MessagePoster](modules.md#messageposter)
 - [OffEventCallback](modules.md#offeventcallback)
+- [OnMessageArrive](modules.md#onmessagearrive)
 
 ### Variables
 
@@ -67,7 +68,7 @@
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:378
+src/shimo-broadcast-channel.ts:402
 
 ___
 
@@ -87,7 +88,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:357
+src/shimo-broadcast-channel.ts:381
 
 ___
 
@@ -111,7 +112,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:387
+src/shimo-broadcast-channel.ts:411
 
 ___
 
@@ -137,7 +138,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:354
+src/shimo-broadcast-channel.ts:378
 
 ___
 
@@ -155,7 +156,35 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:385
+src/shimo-broadcast-channel.ts:409
+
+___
+
+### OnMessageArrive
+
+Ƭ **OnMessageArrive**: (`event`: `ShimoMessageEvent`) => `Promise`<`ShimoMessageEvent` \| `undefined`\>
+
+#### Type declaration
+
+▸ (`event`): `Promise`<`ShimoMessageEvent` \| `undefined`\>
+
+消息到达时的回调函数，在消息正式分发前被调用，也会影响到 `invoke()`。
+返回 undefined 时，消息将会被抛弃。
+一般用于消息去重。
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `ShimoMessageEvent` |
+
+##### Returns
+
+`Promise`<`ShimoMessageEvent` \| `undefined`\>
+
+#### Defined in
+
+src/shimo-broadcast-channel.ts:17
 
 ## Variables
 

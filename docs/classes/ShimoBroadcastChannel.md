@@ -16,6 +16,7 @@
 - [eventHandlers](ShimoBroadcastChannel.md#eventhandlers)
 - [id](ShimoBroadcastChannel.md#id)
 - [invokeHandlers](ShimoBroadcastChannel.md#invokehandlers)
+- [onMessageArrive](ShimoBroadcastChannel.md#onmessagearrive)
 
 ### Methods
 
@@ -47,7 +48,7 @@
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:25
+src/shimo-broadcast-channel.ts:39
 
 ## Properties
 
@@ -57,7 +58,7 @@ src/shimo-broadcast-channel.ts:25
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:15
+src/shimo-broadcast-channel.ts:29
 
 ___
 
@@ -67,7 +68,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:17
+src/shimo-broadcast-channel.ts:31
 
 ___
 
@@ -77,7 +78,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:23
+src/shimo-broadcast-channel.ts:37
 
 ___
 
@@ -87,7 +88,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:21
+src/shimo-broadcast-channel.ts:35
 
 ___
 
@@ -97,7 +98,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:13
+src/shimo-broadcast-channel.ts:20
 
 ___
 
@@ -107,7 +108,21 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:19
+src/shimo-broadcast-channel.ts:33
+
+___
+
+### onMessageArrive
+
+• `Optional` **onMessageArrive**: [`OnMessageArrive`](../modules.md#onmessagearrive)
+
+消息到达时的回调函数，在消息正式分发前被调用，也会影响到 `invoke()`。
+返回 undefined 时，消息将会被抛弃。
+一般用于消息去重。
+
+#### Defined in
+
+src/shimo-broadcast-channel.ts:27
 
 ## Methods
 
@@ -129,7 +144,7 @@ src/shimo-broadcast-channel.ts:19
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:80
+src/shimo-broadcast-channel.ts:94
 
 ___
 
@@ -151,7 +166,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:332
+src/shimo-broadcast-channel.ts:356
 
 ___
 
@@ -160,7 +175,7 @@ ___
 ▸ **distributeMessage**(`messageEvent`): `Promise`<`void`\>
 
 在当前 channel 实例里分发消息，不会分发到其它 channel 实例。
-用于类似 cross-origin iframe 之间的通信。
+一般在 BroadcastChannel 收到消息后，由内部调用，外部调用主要用于类似 cross-origin window 的场景，将收到的消息转入 channel 内部处理。
 
 #### Parameters
 
@@ -174,7 +189,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:209
+src/shimo-broadcast-channel.ts:223
 
 ___
 
@@ -202,7 +217,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:147
+src/shimo-broadcast-channel.ts:161
 
 ___
 
@@ -222,7 +237,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:230
+src/shimo-broadcast-channel.ts:254
 
 ___
 
@@ -242,7 +257,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:267
+src/shimo-broadcast-channel.ts:291
 
 ___
 
@@ -262,7 +277,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:65
+src/shimo-broadcast-channel.ts:79
 
 ___
 
@@ -295,7 +310,7 @@ Invoke 消息并不会被监听，只会被发送到 channel 中通过 addInvoke
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:285
+src/shimo-broadcast-channel.ts:309
 
 ___
 
@@ -325,7 +340,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:132
+src/shimo-broadcast-channel.ts:146
 
 ___
 
@@ -355,7 +370,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:96
+src/shimo-broadcast-channel.ts:110
 
 ___
 
@@ -385,7 +400,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:111
+src/shimo-broadcast-channel.ts:125
 
 ___
 
@@ -408,7 +423,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:166
+src/shimo-broadcast-channel.ts:180
 
 ___
 
@@ -430,4 +445,4 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:341
+src/shimo-broadcast-channel.ts:365

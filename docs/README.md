@@ -3,15 +3,15 @@ shimo-broadcast-channel / [Exports](modules.md)
 # Usage
 
 ```typescript
-import { ShimoBroadcastChannel } from 'shimo-broadcast-channel';
+import { ShimoBroadcastChannel } from "shimo-broadcast-channel";
 
 const channel = new ShimoBroadcastChannel({
-  channelId: 'test',
+  channelId: "test",
 });
 
-await channel.postMessage('message');
+await channel.postMessage("message");
 
-channel.on('message', (msg) => {
+channel.on("message", (msg) => {
   // ...
 });
 ```
@@ -48,20 +48,20 @@ Parent window：
 import {
   SOURCE_NAMESPACE, // 'ShimoBroadcastChannel'
   ShimoBroadcastChannel,
-} from 'shimo-broadcast-channel';
+} from "shimo-broadcast-channel";
 
-const iframe = document.querySelector('iframe');
+const iframe = document.querySelector("iframe");
 
 const channel = new ShimoBroadcastChannel({
-  channelId: 'test',
+  channelId: "test",
 });
 
 // 监听 postMessage 事件，把消息通过其他方式发出去
-channel.on('postMessage', (event: ShimoMessageEvent) => {
-  iframe.contentWindow.postMessage(evt, '*');
+channel.on("postMessage", (event: ShimoMessageEvent) => {
+  iframe.contentWindow.postMessage(evt, "*");
 });
 
-window.addEventListener('message', (evt: MessageEvent) => {
+window.addEventListener("message", (evt: MessageEvent) => {
   // 如果消息符合规则，则让 channel 来分发消息
   if (evt.data && evt.data.source === SOURCE_NAMESPACE) {
     channel.distributeMessage(evt.data);
@@ -70,11 +70,11 @@ window.addEventListener('message', (evt: MessageEvent) => {
   }
 });
 
-channel.addInvokeHandler('greeting', (name: string) => {
+channel.addInvokeHandler("greeting", (name: string) => {
   return `Hello, ${name}`;
 });
 
-channel.on('message', (msg) => {
+channel.on("message", (msg) => {
   console.log(msg); // 'Hello, John'
 });
 ```
@@ -85,18 +85,18 @@ iframe window：
 import {
   SOURCE_NAMESPACE,
   ShimoBroadcastChannel,
-} from 'shimo-broadcast-channel';
+} from "shimo-broadcast-channel";
 
 const channel = new ShimoBroadcastChannel({
-  channelId: 'test',
+  channelId: "test",
 });
 
 // 监听 postMessage 事件，把消息通过其他方式发出去
-channel.on('postMessage', (evt: ShimoMessageEvent) => {
-  window.parent.postMessage(evt, '*');
+channel.on("postMessage", (evt: ShimoMessageEvent) => {
+  window.parent.postMessage(evt, "*");
 });
 
-window.addEventListener('message', (evt: MessageEvent) => {
+window.addEventListener("message", (evt: MessageEvent) => {
   // 如果消息符合规则，则让 channel 来分发消息
   if (evt.data && evt.data.source === SOURCE_NAMESPACE) {
     channel.distributeMessage(evt.data);
@@ -105,11 +105,26 @@ window.addEventListener('message', (evt: MessageEvent) => {
   }
 });
 
-channel.invoke('greeting', ['John']).then((msg: ShimoMessageEvent) => {
+channel.invoke("greeting", ["John"]).then((msg: ShimoMessageEvent) => {
   console.log(msg.data); // 'Hello, John'
 
   channel.postMessage(msg.data);
 });
 ```
 
-> 多重 iframe 嵌套或一个 window 嵌套多个 iframe，用上述方式会导致 BroadcastChannel 中有多条重复消息，建议只在单 window 到单 iframe 的情况下使用。
+> 多重 iframe 嵌套或一个 window 嵌套多个 iframe，用上述方式会导致 BroadcastChannel 中有多条重复消息，建议只在单 window 到单 iframe 的情况下使用，或使用 `onMessageArrive` 进行去重。
+
+```typescript
+const channel = new ShimoBroadcastChannel();
+
+const cache = new SomeCache({ ttl: CACHE_TTL });
+
+channel.onMessageArrive = async (evt: ShimoMessageEvent) => {
+  // 消息在 cache 中说明被处理过
+  if (await cache.has(evt.id)) {
+    return;
+  }
+  cache.add(evt.id);
+  return evt;
+};
+```
