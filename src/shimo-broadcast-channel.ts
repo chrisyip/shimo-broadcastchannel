@@ -9,8 +9,22 @@ import debug, { enableDebug, disableDebug } from './debug'
 
 export const INVOKE_DEFAUTL_TIMEOUT = 60000
 
+/**
+ * 消息到达时的回调函数，在消息正式分发前被调用，也会影响到 `invoke()`。
+ * 返回 undefined 时，消息将会被抛弃。
+ * 一般用于消息去重。
+ */
+export type OnMessageArrive = (event: ShimoMessageEvent) => Promise<ShimoMessageEvent | undefined>
+
 export default class ShimoBroadcastChannel {
   readonly id: string
+
+  /**
+   * 消息到达时的回调函数，在消息正式分发前被调用，也会影响到 `invoke()`。
+   * 返回 undefined 时，消息将会被抛弃。
+   * 一般用于消息去重。
+   */
+  onMessageArrive?: OnMessageArrive
 
   private readonly channel: BroadcastChannel
 
@@ -210,6 +224,16 @@ export default class ShimoBroadcastChannel {
     if (messageEvent.context?.channelId !== this.id || messageEvent.emitter === this.emitterId) {
       debug('discarding message', messageEvent)
       return
+    }
+
+    // 允许外部实现消息去重逻辑
+    if (typeof this.onMessageArrive === 'function') {
+      const event = await this.onMessageArrive(messageEvent)
+      if (!(event instanceof ShimoMessageEvent)) {
+        debug('message arrived but not handled', messageEvent)
+        return
+      }
+      messageEvent = event
     }
 
     debug('delivering message', messageEvent)
