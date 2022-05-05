@@ -4,7 +4,8 @@
   "description": "",
   "main": "dist/shimo-broadcast-channel.js",
   "scripts": {
-    "prepack": "npm run docs-auto && NODE_ENV=production npm run build",
+    "preversion": "npm run docs-auto",
+    "prepack": "NODE_ENV=production npm run build",
     "build": "webpack",
     "prepare": "husky install",
     "docs": "typedoc src/index.ts",
