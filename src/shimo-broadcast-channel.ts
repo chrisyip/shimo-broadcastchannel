@@ -202,7 +202,7 @@ export default class ShimoBroadcastChannel {
 
   /**
    * 在当前 channel 实例里分发消息，不会分发到其它 channel 实例。
-   * 用于类似 cross-origin iframe 之间的通信。
+   * 一般在 BroadcastChannel 收到消息后，由内部调用，外部调用主要用于类似 cross-origin window 的场景，将收到的消息转入 channel 内部处理。
    *
    * @param messageEvent 消息
    */
