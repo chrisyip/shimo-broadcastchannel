@@ -6,10 +6,23 @@
 
 ### Properties
 
+- [autoStructuredClone](Options.md#autostructuredclone)
 - [channelId](Options.md#channelid)
 - [debug](Options.md#debug)
 
 ## Properties
+
+### autoStructuredClone
+
+• `Optional` **autoStructuredClone**: `boolean`
+
+是否启用自动 structuredClone 在发送前对数据进行处理
+
+#### Defined in
+
+src/shimo-broadcast-channel.ts:538
+
+___
 
 ### channelId
 
@@ -17,7 +30,7 @@
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:424
+src/shimo-broadcast-channel.ts:531
 
 ___
 
@@ -27,4 +40,4 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:426
+src/shimo-broadcast-channel.ts:533

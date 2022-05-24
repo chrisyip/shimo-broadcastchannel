@@ -6,9 +6,11 @@
 如果在绑定 listener 时指定了 context，
 则只有收到的消息的 context.audience 和 listener 的 context.audience 匹配才会将消息传递给 listener。
 
-## Indexable
+## Hierarchy
 
-▪ [key: `string`]: `unknown`
+- [`BaseContext`](BaseContext.md)
+
+  ↳ **`Context`**
 
 ## Table of contents
 
@@ -28,9 +30,13 @@
 
 消息的受众，会和 listener 的 context.audience 对比。
 
+#### Inherited from
+
+[BaseContext](BaseContext.md).[audience](BaseContext.md#audience)
+
 #### Defined in
 
-src/shimo-broadcast-channel.ts:448
+src/shimo-broadcast-channel.ts:550
 
 ___
 
@@ -42,7 +48,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:438
+src/shimo-broadcast-channel.ts:569
 
 ___
 
@@ -54,7 +60,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:443
+src/shimo-broadcast-channel.ts:574
 
 ___
 
@@ -64,9 +70,13 @@ ___
 
 在 Invoke 过程中，多少 ms 之后，仍未收到结果，就会抛出 MessageTimeoutError。
 
+#### Inherited from
+
+[BaseContext](BaseContext.md).[timeout](BaseContext.md#timeout)
+
 #### Defined in
 
-src/shimo-broadcast-channel.ts:453
+src/shimo-broadcast-channel.ts:555
 
 ___
 
@@ -78,4 +88,4 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:458
+src/shimo-broadcast-channel.ts:579

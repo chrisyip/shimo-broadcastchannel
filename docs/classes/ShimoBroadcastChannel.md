@@ -10,6 +10,7 @@
 
 ### Properties
 
+- [autoStructuredClone](ShimoBroadcastChannel.md#autostructuredclone)
 - [channel](ShimoBroadcastChannel.md#channel)
 - [emitter](ShimoBroadcastChannel.md#emitter)
 - [emitterId](ShimoBroadcastChannel.md#emitterid)
@@ -17,6 +18,10 @@
 - [id](ShimoBroadcastChannel.md#id)
 - [invokeHandlers](ShimoBroadcastChannel.md#invokehandlers)
 - [onMessageArrive](ShimoBroadcastChannel.md#onmessagearrive)
+
+### Accessors
+
+- [debug](ShimoBroadcastChannel.md#debug)
 
 ### Methods
 
@@ -28,11 +33,13 @@
 - [handleInvokeResponse](ShimoBroadcastChannel.md#handleinvokeresponse)
 - [initMessageEvent](ShimoBroadcastChannel.md#initmessageevent)
 - [invoke](ShimoBroadcastChannel.md#invoke)
+- [mergeContexts](ShimoBroadcastChannel.md#mergecontexts)
 - [off](ShimoBroadcastChannel.md#off)
 - [on](ShimoBroadcastChannel.md#on)
 - [once](ShimoBroadcastChannel.md#once)
 - [postMessage](ShimoBroadcastChannel.md#postmessage)
 - [removeInvokeHandler](ShimoBroadcastChannel.md#removeinvokehandler)
+- [structuredClone](ShimoBroadcastChannel.md#structuredclone)
 
 ## Constructors
 
@@ -48,9 +55,21 @@
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:39
+src/shimo-broadcast-channel.ts:55
 
 ## Properties
+
+### autoStructuredClone
+
+• **autoStructuredClone**: `boolean`
+
+是否启用自动 structuredClone 在发送前对数据进行处理
+
+#### Defined in
+
+src/shimo-broadcast-channel.ts:39
+
+___
 
 ### channel
 
@@ -58,7 +77,7 @@ src/shimo-broadcast-channel.ts:39
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:29
+src/shimo-broadcast-channel.ts:41
 
 ___
 
@@ -68,7 +87,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:31
+src/shimo-broadcast-channel.ts:43
 
 ___
 
@@ -78,17 +97,17 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:37
+src/shimo-broadcast-channel.ts:53
 
 ___
 
 ### eventHandlers
 
-• `Private` `Readonly` **eventHandlers**: `Map`<`string`, [[`EventHandler`](../modules.md#eventhandler)<`unknown`\>, Context?][]\>
+• `Private` `Readonly` **eventHandlers**: `Map`<`string`, [[`EventHandler`](../modules.md#eventhandler)<`unknown`\>, BaseContext?][]\>
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:35
+src/shimo-broadcast-channel.ts:48
 
 ___
 
@@ -98,7 +117,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:20
+src/shimo-broadcast-channel.ts:27
 
 ___
 
@@ -108,7 +127,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:33
+src/shimo-broadcast-channel.ts:45
 
 ___
 
@@ -122,7 +141,41 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:27
+src/shimo-broadcast-channel.ts:34
+
+## Accessors
+
+### debug
+
+• `get` **debug**(): `boolean`
+
+是否开启 debug 模式。
+
+#### Returns
+
+`boolean`
+
+#### Defined in
+
+src/shimo-broadcast-channel.ts:477
+
+• `set` **debug**(`enable`): `void`
+
+是否开启 debug 模式。
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `enable` | `boolean` | 是否开启 debug 模式。 |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+src/shimo-broadcast-channel.ts:473
 
 ## Methods
 
@@ -136,7 +189,7 @@ src/shimo-broadcast-channel.ts:27
 | :------ | :------ |
 | `name` | `string` |
 | `listener` | [`EventHandler`](../modules.md#eventhandler)<`unknown`\> |
-| `context?` | [`Context`](../interfaces/Context.md) |
+| `context?` | [`BaseContext`](../interfaces/BaseContext.md) |
 
 #### Returns
 
@@ -144,7 +197,7 @@ src/shimo-broadcast-channel.ts:27
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:94
+src/shimo-broadcast-channel.ts:123
 
 ___
 
@@ -158,7 +211,7 @@ ___
 | :------ | :------ |
 | `name` | `string` |
 | `handler` | [`InvokeHandler`](../modules.md#invokehandler) |
-| `context?` | [`Context`](../interfaces/Context.md) |
+| `context?` | [`BaseContext`](../interfaces/BaseContext.md) |
 
 #### Returns
 
@@ -166,7 +219,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:356
+src/shimo-broadcast-channel.ts:435
 
 ___
 
@@ -181,7 +234,7 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `messageEvent` | `ShimoMessageEvent` | 消息 |
+| `messageEvent` | [`ShimoMessageEvent`](ShimoMessageEvent.md) | 消息 |
 
 #### Returns
 
@@ -189,7 +242,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:223
+src/shimo-broadcast-channel.ts:280
 
 ___
 
@@ -217,7 +270,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:161
+src/shimo-broadcast-channel.ts:212
 
 ___
 
@@ -229,7 +282,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `messageEvent` | `ShimoMessageEvent` |
+| `messageEvent` | [`ShimoMessageEvent`](ShimoMessageEvent.md) |
 
 #### Returns
 
@@ -237,7 +290,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:254
+src/shimo-broadcast-channel.ts:314
 
 ___
 
@@ -249,7 +302,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `messageEvent` | `ShimoMessageEvent` |
+| `messageEvent` | [`ShimoMessageEvent`](ShimoMessageEvent.md) |
 
 #### Returns
 
@@ -257,27 +310,27 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:291
+src/shimo-broadcast-channel.ts:353
 
 ___
 
 ### initMessageEvent
 
-▸ `Private` **initMessageEvent**(`input`): `ShimoMessageEvent`
+▸ `Private` **initMessageEvent**(`input`): [`ShimoMessageEvent`](ShimoMessageEvent.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `input` | { `context?`: [`Context`](../interfaces/Context.md) ; `data`: `unknown` ; `origin?`: `string` ; `time?`: `number`  } \| `ShimoMessageEvent` |
+| `input` | { `context?`: [`Context`](../interfaces/Context.md) ; `data`: `unknown` ; `origin?`: `string` ; `time?`: `number`  } \| [`ShimoMessageEvent`](ShimoMessageEvent.md) |
 
 #### Returns
 
-`ShimoMessageEvent`
+[`ShimoMessageEvent`](ShimoMessageEvent.md)
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:79
+src/shimo-broadcast-channel.ts:98
 
 ___
 
@@ -302,7 +355,7 @@ Invoke 消息并不会被监听，只会被发送到 channel 中通过 addInvoke
 | :------ | :------ | :------ |
 | `name` | `string` | - |
 | `args` | `unknown`[] | 参数列表 |
-| `context?` | [`Context`](../interfaces/Context.md) | 消息上下文 |
+| `context?` | [`BaseContext`](../interfaces/BaseContext.md) | 消息上下文 |
 
 #### Returns
 
@@ -310,7 +363,27 @@ Invoke 消息并不会被监听，只会被发送到 channel 中通过 addInvoke
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:309
+src/shimo-broadcast-channel.ts:375
+
+___
+
+### mergeContexts
+
+▸ `Private` **mergeContexts**(`contexts`): [`Context`](../interfaces/Context.md)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `contexts` | ([`BaseContext`](../interfaces/BaseContext.md) \| [`Context`](../interfaces/Context.md))[] |
+
+#### Returns
+
+[`Context`](../interfaces/Context.md)
+
+#### Defined in
+
+src/shimo-broadcast-channel.ts:363
 
 ___
 
@@ -332,7 +405,7 @@ ___
 | :------ | :------ | :------ |
 | `name` | `Name` | 事件名称 |
 | `listener?` | [`EventHandler`](../modules.md#eventhandler)<[`Events`](../modules.md#events)[`Name`]\> | 监听器，不传则取消所有监听器 |
-| `context?` | [`Context`](../interfaces/Context.md) | 监听的消息的上下文，传了则只取消相同上下文 audience 的监听器 |
+| `context?` | [`BaseContext`](../interfaces/BaseContext.md) | 监听的消息的上下文，传了则只取消相同上下文 audience 的监听器 |
 
 #### Returns
 
@@ -340,7 +413,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:146
+src/shimo-broadcast-channel.ts:187
 
 ___
 
@@ -362,7 +435,7 @@ ___
 | :------ | :------ | :------ |
 | `name` | `Name` | 事件名称 |
 | `listener` | [`EventHandler`](../modules.md#eventhandler)<[`Events`](../modules.md#events)[`Name`]\> | 监听器 |
-| `context?` | [`Context`](../interfaces/Context.md) | 监听的消息的上下文，传了则只会收到相同上下文 audience 的消息 |
+| `context?` | [`BaseContext`](../interfaces/BaseContext.md) | 监听的消息的上下文，传了则只会收到相同上下文 audience 的消息 |
 
 #### Returns
 
@@ -370,7 +443,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:110
+src/shimo-broadcast-channel.ts:143
 
 ___
 
@@ -400,7 +473,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:125
+src/shimo-broadcast-channel.ts:162
 
 ___
 
@@ -415,7 +488,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `message` | `unknown` | 消息 |
-| `context?` | [`Context`](../interfaces/Context.md) | 消息的上下文，传了则只有相同上下文 audience 的监听器才能收到消息 |
+| `context?` | [`BaseContext`](../interfaces/BaseContext.md) | 消息的上下文，传了则只有相同上下文 audience 的监听器才能收到消息 |
 
 #### Returns
 
@@ -423,7 +496,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:180
+src/shimo-broadcast-channel.ts:235
 
 ___
 
@@ -437,7 +510,7 @@ ___
 | :------ | :------ |
 | `name` | `string` |
 | `handler` | [`InvokeHandler`](../modules.md#invokehandler) |
-| `context?` | [`Context`](../interfaces/Context.md) |
+| `context?` | [`BaseContext`](../interfaces/BaseContext.md) |
 
 #### Returns
 
@@ -445,4 +518,30 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:365
+src/shimo-broadcast-channel.ts:449
+
+___
+
+### structuredClone
+
+▸ `Private` **structuredClone**<`T`\>(`data`): `T`
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `T` |
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `data` | `unknown` |
+
+#### Returns
+
+`T`
+
+#### Defined in
+
+src/shimo-broadcast-channel.ts:119

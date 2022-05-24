@@ -14,10 +14,13 @@
 - [MessageError](classes/MessageError.md)
 - [MessageTimeoutError](classes/MessageTimeoutError.md)
 - [ShimoBroadcastChannel](classes/ShimoBroadcastChannel.md)
+- [ShimoMessageEvent](classes/ShimoMessageEvent.md)
 
 ### Interfaces
 
+- [BaseContext](interfaces/BaseContext.md)
 - [Context](interfaces/Context.md)
+- [MessageEventOptions](interfaces/MessageEventOptions.md)
 - [Options](interfaces/Options.md)
 
 ### Type aliases
@@ -37,6 +40,7 @@
 
 ### Functions
 
+- [isShimoMessageEventLike](modules.md#isshimomessageeventlike)
 - [structuredClone](modules.md#structuredclone)
 
 ## Type aliases
@@ -68,7 +72,7 @@
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:402
+src/shimo-broadcast-channel.ts:509
 
 ___
 
@@ -82,23 +86,23 @@ ___
 | :------ | :------ | :------ |
 | `error` | [`MessageError`](classes/MessageError.md) | - |
 | `invokeResponse` | `unknown` | - |
-| `message` | `ShimoMessageEvent` | Channel 收到消息时触发的事件 |
+| `message` | [`ShimoMessageEvent`](classes/ShimoMessageEvent.md) | Channel 收到消息时触发的事件 |
 | `messageError` | [`MessageError`](classes/MessageError.md) | 当 channel 收到无法处理的消息时触发的事件 |
-| `postMessage` | `ShimoMessageEvent` | postMessage 事件，当消息通过 channel 发出后，会触发 |
+| `postMessage` | [`ShimoMessageEvent`](classes/ShimoMessageEvent.md) | postMessage 事件，当消息通过 channel 发出后，会触发 |
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:381
+src/shimo-broadcast-channel.ts:488
 
 ___
 
 ### InvokeHandler
 
-Ƭ **InvokeHandler**: (...`args`: `unknown`[]) => `Promise`<`void`\>
+Ƭ **InvokeHandler**: (...`args`: `unknown`[]) => `Promise`<`unknown`\>
 
 #### Type declaration
 
-▸ (...`args`): `Promise`<`void`\>
+▸ (...`args`): `Promise`<`unknown`\>
 
 ##### Parameters
 
@@ -108,17 +112,17 @@ ___
 
 ##### Returns
 
-`Promise`<`void`\>
+`Promise`<`unknown`\>
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:411
+src/shimo-broadcast-channel.ts:518
 
 ___
 
 ### MessagePoster
 
-Ƭ **MessagePoster**: (`message`: `ShimoMessageEvent`) => `void`
+Ƭ **MessagePoster**: (`message`: [`ShimoMessageEvent`](classes/ShimoMessageEvent.md)) => `void`
 
 #### Type declaration
 
@@ -130,7 +134,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `message` | `ShimoMessageEvent` |
+| `message` | [`ShimoMessageEvent`](classes/ShimoMessageEvent.md) |
 
 ##### Returns
 
@@ -138,7 +142,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:378
+src/shimo-broadcast-channel.ts:485
 
 ___
 
@@ -156,17 +160,17 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:409
+src/shimo-broadcast-channel.ts:516
 
 ___
 
 ### OnMessageArrive
 
-Ƭ **OnMessageArrive**: (`event`: `ShimoMessageEvent`) => `Promise`<`ShimoMessageEvent` \| `undefined`\>
+Ƭ **OnMessageArrive**: (`event`: [`ShimoMessageEvent`](classes/ShimoMessageEvent.md)) => `Promise`<[`ShimoMessageEvent`](classes/ShimoMessageEvent.md) \| `undefined`\>
 
 #### Type declaration
 
-▸ (`event`): `Promise`<`ShimoMessageEvent` \| `undefined`\>
+▸ (`event`): `Promise`<[`ShimoMessageEvent`](classes/ShimoMessageEvent.md) \| `undefined`\>
 
 消息到达时的回调函数，在消息正式分发前被调用，也会影响到 `invoke()`。
 返回 undefined 时，消息将会被抛弃。
@@ -176,15 +180,15 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `event` | `ShimoMessageEvent` |
+| `event` | [`ShimoMessageEvent`](classes/ShimoMessageEvent.md) |
 
 ##### Returns
 
-`Promise`<`ShimoMessageEvent` \| `undefined`\>
+`Promise`<[`ShimoMessageEvent`](classes/ShimoMessageEvent.md) \| `undefined`\>
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:17
+src/shimo-broadcast-channel.ts:22
 
 ## Variables
 
@@ -204,7 +208,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:10
+src/shimo-broadcast-channel.ts:15
 
 ___
 
@@ -218,11 +222,33 @@ src/constants.ts:1
 
 ## Functions
 
+### isShimoMessageEventLike
+
+▸ **isShimoMessageEventLike**(`input`): `boolean`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `input` | `unknown` |
+
+#### Returns
+
+`boolean`
+
+#### Defined in
+
+src/message-event.ts:98
+
+___
+
 ### structuredClone
 
 ▸ **structuredClone**(`value`, `options?`): `unknown`
 
-Opinionated structuredClone() method. Transferring values are not supported for now.
+Opinionated structuredClone() method.
+Transferring values are not supported for now.
+Errors will be converted to strings, as Firefox does not yet support sending error type.
 
 https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm
 
@@ -240,4 +266,4 @@ https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clon
 
 #### Defined in
 
-src/structured-clone.ts:17
+src/structured-clone.ts:22
