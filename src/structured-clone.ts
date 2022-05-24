@@ -10,9 +10,14 @@ function isInstanceOf (target: unknown, prototype: any): boolean {
 }
 
 /**
- * Opinionated structuredClone() method. Transferring values are not supported for now.
+ * Opinionated structuredClone() method.
+ * Transferring values are not supported for now.
+ * Errors will be converted to strings, as Firefox does not yet support sending error type.
  *
  * https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm
+ *
+ * @param value
+ * @param options
  */
 export function structuredClone (
   /**
@@ -73,7 +78,11 @@ export function structuredClone (
   }
 
   if (Array.isArray(value)) {
-    return value.map(v => structuredClone(v, options))
+    return value.map((v) => structuredClone(v, options))
+  }
+
+  if (value instanceof Error) {
+    return value.message
   }
 
   // TypedArray

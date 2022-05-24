@@ -3,6 +3,8 @@ import getGlobal from 'globalthis/polyfill'
 
 import ShimoBroadcastChannel, { Options } from './shimo-broadcast-channel'
 
+export * from './message-event'
+
 export * from './shimo-broadcast-channel'
 
 export * from './errors'
@@ -17,15 +19,11 @@ export { ShimoBroadcastChannel, Options }
 
 const globalThis = getGlobal() as any
 
-globalThis.shimo = objectAssign(
-  {},
-  globalThis.shimo,
-  {
-    createChannel (options: Options) {
-      return new ShimoBroadcastChannel(options)
-    }
+globalThis.shimo = objectAssign({}, globalThis.shimo, {
+  createChannel (options: Options) {
+    return new ShimoBroadcastChannel(options)
   }
-)
+})
 
 declare global {
   interface globalThis {

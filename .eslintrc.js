@@ -1,8 +1,6 @@
 module.exports = {
-  extends: ['standard-with-typescript'],
+  extends: ['prettier', 'standard-with-typescript'],
   parserOptions: {
-    project: [
-      './tsconfig.eslint.json'
-    ]
+    project: ['./tsconfig.eslint.json']
   }
 }

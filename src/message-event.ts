@@ -77,12 +77,28 @@ export class ShimoMessageEvent {
       }
     })
 
-    assert(this.context.channelId, (id: unknown) => typeof id === 'string' && id.length > 0, 'channel id must be a non-empty string')
-    assert(this.id, (id: unknown) => typeof id === 'string' && id.length > 0, 'id must be a non-empty string')
-    assert(this.time, (time: unknown) => typeof time === 'number' && time >= 0, 'time must be a positive number')
+    assert(
+      this.context.channelId,
+      (id: unknown) => typeof id === 'string' && id.length > 0,
+      'channel id must be a non-empty string'
+    )
+    assert(
+      this.id,
+      (id: unknown) => typeof id === 'string' && id.length > 0,
+      'id must be a non-empty string'
+    )
+    assert(
+      this.time,
+      (time: unknown) => typeof time === 'number' && time >= 0,
+      'time must be a positive number'
+    )
   }
 }
 
 export function isShimoMessageEventLike (input: unknown): boolean {
-  return input instanceof ShimoMessageEvent || (input != null && (input as Record<string, unknown>).source === SOURCE_NAMESPACE)
+  return (
+    input instanceof ShimoMessageEvent ||
+    (input != null &&
+      (input as Record<string, unknown>).source === SOURCE_NAMESPACE)
+  )
 }

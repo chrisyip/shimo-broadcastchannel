@@ -5,9 +5,7 @@ export class MessageError extends Error {
   context: Context
 }
 
-export class MessageTimeoutError extends Error {
-
-}
+export class MessageTimeoutError extends Error {}
 
 export class InvokeError extends Error {
   method: string

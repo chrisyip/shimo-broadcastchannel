@@ -4,8 +4,13 @@ import { TinyEmitter } from 'tiny-emitter'
 import assign from 'object-assign'
 import { assert } from './assert'
 import { InvokeError, MessageError, MessageTimeoutError } from './errors'
-import { ShimoMessageEvent, isShimoMessageEventLike, MessageEventOptions } from './message-event'
-import debug, { enableDebug, disableDebug } from './debug'
+import {
+  ShimoMessageEvent,
+  isShimoMessageEventLike,
+  MessageEventOptions
+} from './message-event'
+import debug, { enabled, toggle as toggleDebug } from './debug'
+import { structuredClone } from './structured-clone'
 
 export const INVOKE_DEFAUTL_TIMEOUT = 60000
 
@@ -14,7 +19,9 @@ export const INVOKE_DEFAUTL_TIMEOUT = 60000
  * 返回 undefined 时，消息将会被抛弃。
  * 一般用于消息去重。
  */
-export type OnMessageArrive = (event: ShimoMessageEvent) => Promise<ShimoMessageEvent | undefined>
+export type OnMessageArrive = (
+  event: ShimoMessageEvent
+) => Promise<ShimoMessageEvent | undefined>
 
 export default class ShimoBroadcastChannel {
   readonly id: string
@@ -26,63 +33,81 @@ export default class ShimoBroadcastChannel {
    */
   onMessageArrive?: OnMessageArrive
 
+  /**
+   * 是否启用自动 structuredClone 在发送前对数据进行处理
+   */
+  autoStructuredClone: boolean
+
   private readonly channel: BroadcastChannel
 
   private readonly emitter: TinyEmitter
 
-  private readonly invokeHandlers: Map<string, InvokeInternalHandler[]> = new Map()
+  private readonly invokeHandlers: Map<string, InvokeInternalHandler[]> =
+  new Map()
 
-  private readonly eventHandlers: Map<string, Array<[EventHandler<unknown>, Context?]>> = new Map()
+  private readonly eventHandlers: Map<
+  string,
+  Array<[EventHandler<unknown>, BaseContext?]>
+  > = new Map()
 
   private readonly emitterId = uuid()
 
   constructor (options: Options) {
-    if (options.debug === true) {
-      enableDebug()
-    } else if (options.debug === false) {
-      disableDebug()
-    }
+    this.debug = options.debug === true
+    this.autoStructuredClone = options.autoStructuredClone === true
 
     Object.defineProperty(this, 'id', {
       enumerable: true,
-      value: typeof options.channelId === 'string'
-        ? assert<string>(options.channelId.trim(), (id: string) => id.length > 0, 'channelId must be a non-empty string')
-        : uuid()
+      value:
+        typeof options.channelId === 'string'
+          ? assert<string>(
+            options.channelId.trim(),
+            (id: string) => id.length > 0,
+            'channelId must be a non-empty string'
+          )
+          : uuid()
     })
 
     this.emitter = new TinyEmitter()
 
     const channel = new BroadcastChannel(this.id)
-    channel.addEventListener('message', evt => {
-      (async () => {
+    channel.addEventListener('message', (evt) => {
+      ;(async () => {
         let data: ShimoMessageEvent
 
         try {
           data = this.initMessageEvent(evt)
         } catch (e) {
-          const err = new MessageError(e?.message ?? 'message cannot be handled')
+          const err = new MessageError(
+            e?.message ?? 'message cannot be handled'
+          )
           err.originMessage = evt.data
           this.emit('messageError', err)
           return
         }
 
         await this.distributeMessage(data)
-      })()
-        .catch(async err => {
-          this.emit('error', err)
-        })
+      })().catch(async (err) => {
+        this.emit('error', err)
+      })
     })
 
     this.channel = channel
   }
 
-  private initMessageEvent (input: {
-    data: unknown
-    context?: Context
-    time?: number
-    origin?: string
-  } | ShimoMessageEvent): ShimoMessageEvent {
-    const payload: MessageEventOptions = assign(assign({ emitter: this.emitterId }, input, { channelId: this.id }))
+  private initMessageEvent (
+    input:
+    | {
+      data: unknown
+      context?: Context
+      time?: number
+      origin?: string
+    }
+    | ShimoMessageEvent
+  ): ShimoMessageEvent {
+    const payload: MessageEventOptions = assign(
+      assign({ emitter: this.emitterId }, input, { channelId: this.id })
+    )
 
     if (typeof payload.origin !== 'string') {
       payload.origin = location.origin
@@ -91,7 +116,15 @@ export default class ShimoBroadcastChannel {
     return new ShimoMessageEvent(payload)
   }
 
-  private addEventListener (name: string, listener: EventHandler<unknown>, context?: Context): void {
+  private structuredClone<T>(data: unknown): T {
+    return (this.autoStructuredClone ? structuredClone(data) : data) as T
+  }
+
+  private addEventListener (
+    name: string,
+    listener: EventHandler<unknown>,
+    context?: BaseContext
+  ): void {
     let evts = this.eventHandlers.get(name)
     if (!Array.isArray(evts)) {
       evts = []
@@ -107,7 +140,11 @@ export default class ShimoBroadcastChannel {
    * @param listener 监听器
    * @param context 监听的消息的上下文，传了则只会收到相同上下文 audience 的消息
    */
-  on<Name extends keyof Events>(name: Name, listener: EventHandler<Events[Name]>, context?: Context): OffEventCallback {
+  on<Name extends keyof Events>(
+    name: Name,
+    listener: EventHandler<Events[Name]>,
+    context?: BaseContext
+  ): OffEventCallback {
     this.addEventListener(name, listener, context)
 
     return () => {
@@ -122,7 +159,11 @@ export default class ShimoBroadcastChannel {
    * @param listener 监听器
    * @param context 监听的消息的上下文，传了则只会收到相同上下文 audience 的消息
    */
-  once<Name extends keyof Events>(name: Name, listener: EventHandler<Events[Name]>, context?: Context): OffEventCallback {
+  once<Name extends keyof Events>(
+    name: Name,
+    listener: EventHandler<Events[Name]>,
+    context?: Context
+  ): OffEventCallback {
     const cb: OnceHandler = (payload: Events[Name], context?: Context) => {
       this.off(name, listener, context)
       listener(payload, context)
@@ -143,22 +184,36 @@ export default class ShimoBroadcastChannel {
    * @param listener 监听器，不传则取消所有监听器
    * @param context 监听的消息的上下文，传了则只取消相同上下文 audience 的监听器
    */
-  off<Name extends keyof Events>(name: Name, listener?: EventHandler<Events[Name]>, context?: Context): void {
+  off<Name extends keyof Events>(
+    name: Name,
+    listener?: EventHandler<Events[Name]>,
+    context?: BaseContext
+  ): void {
     if (arguments.length === 1) {
       this.eventHandlers.delete(name)
     } else {
       const evts = this.eventHandlers.get(name)
 
       if (Array.isArray(evts)) {
-        this.eventHandlers.set(name, evts.filter(([_listener, ctx]) => {
-          return (_listener !== listener && (_listener as OnceHandler).handler !== listener) ||
-        (ctx?.audience === context?.audience)
-        }))
+        this.eventHandlers.set(
+          name,
+          evts.filter(([_listener, ctx]) => {
+            return (
+              (_listener !== listener &&
+                (_listener as OnceHandler).handler !== listener) ||
+              ctx?.audience === context?.audience
+            )
+          })
+        )
       }
     }
   }
 
-  emit<Name extends keyof Events>(name: Name, data: Events[Name], context?: Context): void {
+  emit<Name extends keyof Events>(
+    name: Name,
+    data: Events[Name],
+    context?: Context
+  ): void {
     debug('emitting event', name, data, context)
 
     const evts = this.eventHandlers.get(name)
@@ -177,7 +232,7 @@ export default class ShimoBroadcastChannel {
    * @param message 消息
    * @param context 消息的上下文，传了则只有相同上下文 audience 的监听器才能收到消息
    */
-  async postMessage (message: unknown, context?: Context): Promise<void> {
+  async postMessage (message: unknown, context?: BaseContext): Promise<void> {
     debug('pre postMessage', { message, context })
 
     let data: ShimoMessageEvent
@@ -188,9 +243,11 @@ export default class ShimoBroadcastChannel {
       } else {
         data = this.initMessageEvent({
           data: message,
-          context
+          context: context != null ? this.mergeContexts([context]) : context
         })
       }
+
+      data = this.structuredClone<ShimoMessageEvent>(data)
     } catch (e) {
       debug('message invalid', e)
 
@@ -221,7 +278,10 @@ export default class ShimoBroadcastChannel {
    * @param messageEvent 消息
    */
   async distributeMessage (messageEvent: ShimoMessageEvent): Promise<void> {
-    if (messageEvent.context?.channelId !== this.id || messageEvent.emitter === this.emitterId) {
+    if (
+      messageEvent.context?.channelId !== this.id ||
+      messageEvent.emitter === this.emitterId
+    ) {
       debug('discarding message', messageEvent)
       return
     }
@@ -251,7 +311,9 @@ export default class ShimoBroadcastChannel {
     this.emit('message', messageEvent, messageEvent.context)
   }
 
-  private async handleInvokeRequest (messageEvent: ShimoMessageEvent): Promise<void> {
+  private async handleInvokeRequest (
+    messageEvent: ShimoMessageEvent
+  ): Promise<void> {
     debug('handle invoke request', messageEvent)
 
     const { name, args } = messageEvent.data as InvokeData
@@ -298,6 +360,10 @@ export default class ShimoBroadcastChannel {
     this.emitter.emit(messageEvent.id, messageEvent.data)
   }
 
+  private mergeContexts (contexts: Array<BaseContext | Context>): Context {
+    return assign({ channelId: this.id }, ...contexts)
+  }
+
   /**
    * 发出一条 Invoke 消息，并等待返回结果
    * Invoke 消息并不会被监听，只会被发送到 channel 中通过 addInvokeHandler 添加的 handler 中。
@@ -306,32 +372,41 @@ export default class ShimoBroadcastChannel {
    * @param args 参数列表
    * @param context 消息上下文
    */
-  async invoke<T>(name: string, args: unknown[], context?: Context): Promise<T> {
+  async invoke<T>(
+    name: string,
+    args: unknown[],
+    context?: BaseContext
+  ): Promise<T> {
     const data = {
       name,
       args
     }
 
-    const timeout = typeof context?.timeout === 'number' && context?.timeout > 0 ? context?.timeout : INVOKE_DEFAUTL_TIMEOUT
+    const timeout =
+      typeof context?.timeout === 'number' && context?.timeout > 0
+        ? context?.timeout
+        : INVOKE_DEFAUTL_TIMEOUT
     const ctxId = uuid()
 
     const p = new Promise<T>((resolve, reject) => {
-      this.emitter.once(ctxId, (data: {
-        result: T
-        error?: Error | string
-      }) => {
-        if (data.error instanceof InvokeError) {
-          reject(data.error)
-        } else if (data.error != null) {
-          // Firefox 暂不支持通过 postMessage 传递 Error 对象
-          const err = new InvokeError(typeof data.error === 'string' ? data.error : data.error.message)
-          err.method = name
-          err.arguments = args
-          reject(err)
-        } else {
-          resolve(data.result)
+      this.emitter.once(
+        ctxId,
+        (data: { result: T, error?: Error | string }) => {
+          if (data.error instanceof InvokeError) {
+            reject(data.error)
+          } else if (data.error != null) {
+            // Firefox 暂不支持通过 postMessage 传递 Error 对象
+            const err = new InvokeError(
+              typeof data.error === 'string' ? data.error : data.error.message
+            )
+            err.method = name
+            err.arguments = args
+            reject(err)
+          } else {
+            resolve(data.result)
+          }
         }
-      })
+      )
 
       setTimeout(() => {
         this.emitter.off(ctxId)
@@ -341,7 +416,11 @@ export default class ShimoBroadcastChannel {
 
     await this.postMessage(
       data,
-      assign({}, context, { messageId: ctxId, timeout, type: ContextType.InvokeRequest })
+      assign({}, context, {
+        messageId: ctxId,
+        timeout,
+        type: ContextType.InvokeRequest
+      })
     )
 
     const result = await p
@@ -353,8 +432,13 @@ export default class ShimoBroadcastChannel {
     return result
   }
 
-  addInvokeHandler (name: string, handler: InvokeHandler, context?: Context): void {
-    let items: InvokeInternalHandler[] | undefined = this.invokeHandlers.get(name)
+  addInvokeHandler (
+    name: string,
+    handler: InvokeHandler,
+    context?: BaseContext
+  ): void {
+    let items: InvokeInternalHandler[] | undefined =
+      this.invokeHandlers.get(name)
     if (!Array.isArray(items)) {
       items = []
     }
@@ -362,13 +446,36 @@ export default class ShimoBroadcastChannel {
     this.invokeHandlers.set(name, items)
   }
 
-  removeInvokeHandler (name: string, handler: InvokeHandler, context?: Context): void {
+  removeInvokeHandler (
+    name: string,
+    handler: InvokeHandler,
+    context?: BaseContext
+  ): void {
     const items = this.invokeHandlers.get(name)
     if (Array.isArray(items)) {
-      this.invokeHandlers.set(name, items.filter(item => {
-        return item.handler !== handler || item.context?.audience !== context?.audience
-      }))
+      this.invokeHandlers.set(
+        name,
+        items.filter((item) => {
+          return (
+            item.handler !== handler ||
+            item.context?.audience !== context?.audience
+          )
+        })
+      )
     }
+  }
+
+  /**
+   * 是否开启 debug 模式。
+   *
+   * @param enable 是否开启 debug 模式。
+   */
+  set debug (enable: boolean) {
+    toggleDebug(enable)
+  }
+
+  get debug (): boolean {
+    return enabled()
   }
 }
 
@@ -408,11 +515,11 @@ interface OnceHandler {
 
 export type OffEventCallback = () => void
 
-export type InvokeHandler = (...args: unknown[]) => Promise<void>
+export type InvokeHandler = (...args: unknown[]) => Promise<unknown>
 
 interface InvokeInternalHandler {
   handler: InvokeHandler
-  context?: Context
+  context?: BaseContext
 }
 
 interface InvokeData {
@@ -424,6 +531,11 @@ export interface Options {
   channelId?: string
 
   debug?: boolean
+
+  /**
+   * 是否启用自动 structuredClone 在发送前对数据进行处理
+   */
+  autoStructuredClone?: boolean
 }
 
 /**
@@ -431,7 +543,26 @@ export interface Options {
  * 如果在绑定 listener 时指定了 context，
  * 则只有收到的消息的 context.audience 和 listener 的 context.audience 匹配才会将消息传递给 listener。
  */
-export interface Context {
+export interface BaseContext {
+  /**
+   * 消息的受众，会和 listener 的 context.audience 对比。
+   */
+  audience?: string
+
+  /**
+   * 在 Invoke 过程中，多少 ms 之后，仍未收到结果，就会抛出 MessageTimeoutError。
+   */
+  timeout?: number
+
+  [key: string]: unknown
+}
+
+/**
+ * 消息上下文。
+ * 如果在绑定 listener 时指定了 context，
+ * 则只有收到的消息的 context.audience 和 listener 的 context.audience 匹配才会将消息传递给 listener。
+ */
+export interface Context extends BaseContext {
   /**
    * 对应的频道 ID。
    */
@@ -443,21 +574,9 @@ export interface Context {
   messageId: string
 
   /**
-   * 消息的受众，会和 listener 的 context.audience 对比。
-   */
-  audience?: string
-
-  /**
-   * 在 Invoke 过程中，多少 ms 之后，仍未收到结果，就会抛出 MessageTimeoutError。
-   */
-  timeout?: number
-
-  /**
    * 消息的类型。
    */
   type?: ContextType
-
-  [key: string]: unknown
 }
 
 export enum ContextType {

@@ -33,13 +33,14 @@
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "clean-webpack-plugin": "^4.0.0",
     "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard-with-typescript": "^21.0.1",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.2.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.4",
-    "prettier": "^2.5.1",
+    "prettier": "^2.6.2",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.5.0",
     "typedoc": "^0.22.12",
@@ -50,7 +51,7 @@
   },
   "lint-staged": {
     "*.{js,ts}": [
-      "eslint . --fix"
+      "eslint --fix --cache"
     ],
     "*.{md,json}": "prettier --write"
   },
