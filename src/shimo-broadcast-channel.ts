@@ -311,9 +311,10 @@ export default class ShimoBroadcastChannel {
     this.emit('message', messageEvent, messageEvent.context)
   }
 
-  private async handleInvokeRequest (
-    messageEvent: ShimoMessageEvent
-  ): Promise<void> {
+  /**
+   * 响应其他 channel 发送的 Invoke 调用
+   */
+  private async handleInvokeRequest (messageEvent: ShimoMessageEvent): Promise<void> {
     debug('handle invoke request', messageEvent)
 
     const { name, args } = messageEvent.data as InvokeData
@@ -330,10 +331,10 @@ export default class ShimoBroadcastChannel {
         continue
       }
 
-      const data: { result?: unknown, error?: Error } = {}
+      const data: InvokeResponsePayload = { data: undefined }
 
       try {
-        data.result = await item.handler(...args)
+        data.data = await item.handler(...args)
       } catch (e) {
         data.error = e
       }
@@ -350,6 +351,9 @@ export default class ShimoBroadcastChannel {
     debug('no invoke handler found', name)
   }
 
+  /**
+   * 处理非当前 channel 响应的 Invoke 结果，会通过 emitter 将 payload 发出去
+   */
   private handleInvokeResponse (messageEvent: ShimoMessageEvent): void {
     debug('handle invoke response', messageEvent)
 
@@ -388,10 +392,12 @@ export default class ShimoBroadcastChannel {
         : INVOKE_DEFAUTL_TIMEOUT
     const ctxId = uuid()
 
+    // 响应 invoke 返回结果
     const p = new Promise<T>((resolve, reject) => {
+      // 只处理第一个响应的结果
       this.emitter.once(
         ctxId,
-        (data: { result: T, error?: Error | string }) => {
+        (data: InvokeResponsePayload) => {
           if (data.error instanceof InvokeError) {
             reject(data.error)
           } else if (data.error != null) {
@@ -403,7 +409,7 @@ export default class ShimoBroadcastChannel {
             err.arguments = args
             reject(err)
           } else {
-            resolve(data.result)
+            resolve(data.data as T)
           }
         }
       )
@@ -515,7 +521,7 @@ interface OnceHandler {
 
 export type OffEventCallback = () => void
 
-export type InvokeHandler = (...args: unknown[]) => Promise<unknown>
+export type InvokeHandler = (...args: any[]) => Promise<void>
 
 interface InvokeInternalHandler {
   handler: InvokeHandler
@@ -583,4 +589,19 @@ export enum ContextType {
   InvokeRequest,
 
   InvokeResponse
+}
+
+/**
+ * Invoke 调用的响应结果
+ */
+export interface InvokeResponsePayload {
+  /**
+   * Invoke 调用的响应结果
+   */
+  data: unknown
+
+  /**
+   * Invoke 调用相应的错误，Firefox 不支持返回 Error，会转换为 string
+   */
+  error?: Error | string
 }
