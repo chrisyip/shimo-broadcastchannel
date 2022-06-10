@@ -20,6 +20,7 @@
 
 - [BaseContext](interfaces/BaseContext.md)
 - [Context](interfaces/Context.md)
+- [InvokeResponsePayload](interfaces/InvokeResponsePayload.md)
 - [MessageEventOptions](interfaces/MessageEventOptions.md)
 - [Options](interfaces/Options.md)
 
@@ -72,7 +73,7 @@
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:509
+src/shimo-broadcast-channel.ts:515
 
 ___
 
@@ -92,31 +93,31 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:488
+src/shimo-broadcast-channel.ts:494
 
 ___
 
 ### InvokeHandler
 
-Ƭ **InvokeHandler**: (...`args`: `unknown`[]) => `Promise`<`unknown`\>
+Ƭ **InvokeHandler**: (...`args`: `any`[]) => `Promise`<`void`\>
 
 #### Type declaration
 
-▸ (...`args`): `Promise`<`unknown`\>
+▸ (...`args`): `Promise`<`void`\>
 
 ##### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `...args` | `unknown`[] |
+| `...args` | `any`[] |
 
 ##### Returns
 
-`Promise`<`unknown`\>
+`Promise`<`void`\>
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:518
+src/shimo-broadcast-channel.ts:524
 
 ___
 
@@ -142,7 +143,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:485
+src/shimo-broadcast-channel.ts:491
 
 ___
 
@@ -160,7 +161,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:516
+src/shimo-broadcast-channel.ts:522
 
 ___
 

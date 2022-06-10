@@ -157,7 +157,7 @@ src/shimo-broadcast-channel.ts:34
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:477
+src/shimo-broadcast-channel.ts:483
 
 • `set` **debug**(`enable`): `void`
 
@@ -175,7 +175,7 @@ src/shimo-broadcast-channel.ts:477
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:473
+src/shimo-broadcast-channel.ts:479
 
 ## Methods
 
@@ -219,7 +219,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:435
+src/shimo-broadcast-channel.ts:441
 
 ___
 
@@ -278,6 +278,8 @@ ___
 
 ▸ `Private` **handleInvokeRequest**(`messageEvent`): `Promise`<`void`\>
 
+响应其他 channel 发送的 Invoke 调用
+
 #### Parameters
 
 | Name | Type |
@@ -290,13 +292,15 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:314
+src/shimo-broadcast-channel.ts:317
 
 ___
 
 ### handleInvokeResponse
 
 ▸ `Private` **handleInvokeResponse**(`messageEvent`): `void`
+
+处理非当前 channel 响应的 Invoke 结果，会通过 emitter 将 payload 发出去
 
 #### Parameters
 
@@ -310,7 +314,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:353
+src/shimo-broadcast-channel.ts:357
 
 ___
 
@@ -363,7 +367,7 @@ Invoke 消息并不会被监听，只会被发送到 channel 中通过 addInvoke
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:375
+src/shimo-broadcast-channel.ts:379
 
 ___
 
@@ -383,7 +387,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:363
+src/shimo-broadcast-channel.ts:367
 
 ___
 
@@ -518,7 +522,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:449
+src/shimo-broadcast-channel.ts:455
 
 ___
 

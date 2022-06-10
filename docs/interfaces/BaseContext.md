@@ -33,7 +33,7 @@
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:550
+src/shimo-broadcast-channel.ts:556
 
 ___
 
@@ -45,4 +45,4 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:555
+src/shimo-broadcast-channel.ts:561

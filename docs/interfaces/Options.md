@@ -20,7 +20,7 @@
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:538
+src/shimo-broadcast-channel.ts:544
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:531
+src/shimo-broadcast-channel.ts:537
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:533
+src/shimo-broadcast-channel.ts:539

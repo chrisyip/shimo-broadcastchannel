@@ -36,7 +36,7 @@
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:550
+src/shimo-broadcast-channel.ts:556
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:569
+src/shimo-broadcast-channel.ts:575
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:574
+src/shimo-broadcast-channel.ts:580
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:555
+src/shimo-broadcast-channel.ts:561
 
 ___
 
@@ -88,4 +88,4 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:579
+src/shimo-broadcast-channel.ts:585
