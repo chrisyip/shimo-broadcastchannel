@@ -99,11 +99,11 @@ ___
 
 ### InvokeHandler
 
-Ƭ **InvokeHandler**: (...`args`: `any`[]) => `Promise`<`void`\>
+Ƭ **InvokeHandler**: (...`args`: `any`[]) => `Promise`<`unknown`\>
 
 #### Type declaration
 
-▸ (...`args`): `Promise`<`void`\>
+▸ (...`args`): `Promise`<`unknown`\>
 
 ##### Parameters
 
@@ -113,7 +113,7 @@ ___
 
 ##### Returns
 
-`Promise`<`void`\>
+`Promise`<`unknown`\>
 
 #### Defined in
 
