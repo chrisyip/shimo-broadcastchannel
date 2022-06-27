@@ -521,7 +521,7 @@ interface OnceHandler {
 
 export type OffEventCallback = () => void
 
-export type InvokeHandler = (...args: any[]) => Promise<unknown>
+export type InvokeHandler = (...args: any[]) => unknown
 
 interface InvokeInternalHandler {
   handler: InvokeHandler
