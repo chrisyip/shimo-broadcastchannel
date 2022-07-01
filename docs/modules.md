@@ -99,11 +99,11 @@ ___
 
 ### InvokeHandler
 
-Ƭ **InvokeHandler**: (...`args`: `any`[]) => `Promise`<`unknown`\>
+Ƭ **InvokeHandler**: (...`args`: `any`[]) => `unknown`
 
 #### Type declaration
 
-▸ (...`args`): `Promise`<`unknown`\>
+▸ (...`args`): `unknown`
 
 ##### Parameters
 
@@ -113,7 +113,7 @@ ___
 
 ##### Returns
 
-`Promise`<`unknown`\>
+`unknown`
 
 #### Defined in
 
