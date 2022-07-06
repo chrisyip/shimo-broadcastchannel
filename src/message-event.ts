@@ -1,5 +1,4 @@
 import { v4 as uuid } from 'uuid'
-import assign from 'object-assign'
 import { Context } from './shimo-broadcast-channel'
 import { assert } from './assert'
 import { SOURCE_NAMESPACE } from './constants'
@@ -37,7 +36,7 @@ export class ShimoMessageEvent {
     emitter,
     channelId
   }: MessageEventOptions) {
-    const ctx = assign({}, context, { channelId })
+    const ctx = Object.assign({}, context, { channelId })
     if (typeof ctx.messageId !== 'string' || ctx.messageId.trim() === '') {
       ctx.messageId = uuid()
     }

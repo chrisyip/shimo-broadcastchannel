@@ -1,5 +1,4 @@
 import isPlainObject from 'is-plain-obj'
-import assign from 'object-assign'
 
 function isInstanceOf (target: unknown, prototype: any): boolean {
   try {
@@ -94,7 +93,7 @@ export function structuredClone (
 
   if (typeof options.replacer === 'function') {
     // Avoid maximum call stack size exceeded error
-    const opts = assign({}, options)
+    const opts = Object.assign({}, options)
     opts.replacer = undefined
 
     return structuredClone(options.replacer(value), opts)

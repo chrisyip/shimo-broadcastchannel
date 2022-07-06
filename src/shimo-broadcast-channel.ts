@@ -1,7 +1,6 @@
 import { BroadcastChannel } from 'broadcast-channel'
 import { v4 as uuid } from 'uuid'
 import { TinyEmitter } from 'tiny-emitter'
-import assign from 'object-assign'
 import { assert } from './assert'
 import { InvokeError, MessageError, MessageTimeoutError } from './errors'
 import {
@@ -24,6 +23,9 @@ export type OnMessageArrive = (
 ) => Promise<ShimoMessageEvent | undefined>
 
 export default class ShimoBroadcastChannel {
+  /**
+   * Channel ID，ID 一致才能通信
+   */
   readonly id: string
 
   /**
@@ -105,8 +107,8 @@ export default class ShimoBroadcastChannel {
     }
     | ShimoMessageEvent
   ): ShimoMessageEvent {
-    const payload: MessageEventOptions = assign(
-      assign({ emitter: this.emitterId }, input, { channelId: this.id })
+    const payload: MessageEventOptions = Object.assign(
+      { emitter: this.emitterId }, input, { channelId: this.id }
     )
 
     if (typeof payload.origin !== 'string') {
@@ -136,9 +138,9 @@ export default class ShimoBroadcastChannel {
   /**
    * 监听事件
    *
-   * @param name 事件名称
-   * @param listener 监听器
-   * @param context 监听的消息的上下文，传了则只会收到相同上下文 audience 的消息
+   * @param name - 事件名称
+   * @param listener - 监听器
+   * @param context - 监听的消息的上下文，传了则只会收到相同上下文 audience 的消息
    */
   on<Name extends keyof Events>(
     name: Name,
@@ -155,9 +157,9 @@ export default class ShimoBroadcastChannel {
   /**
    * 监听事件，触发一次后自动会 off
    *
-   * @param name 事件名称
-   * @param listener 监听器
-   * @param context 监听的消息的上下文，传了则只会收到相同上下文 audience 的消息
+   * @param name - 事件名称
+   * @param listener - 监听器
+   * @param context - 监听的消息的上下文，传了则只会收到相同上下文 audience 的消息
    */
   once<Name extends keyof Events>(
     name: Name,
@@ -180,9 +182,9 @@ export default class ShimoBroadcastChannel {
   /**
    * 取消事件监听
    *
-   * @param name 事件名称
-   * @param listener 监听器，不传则取消所有监听器
-   * @param context 监听的消息的上下文，传了则只取消相同上下文 audience 的监听器
+   * @param name - 事件名称
+   * @param listener - 监听器，不传则取消所有监听器
+   * @param context - 监听的消息的上下文，传了则只取消相同上下文 audience 的监听器
    */
   off<Name extends keyof Events>(
     name: Name,
@@ -229,8 +231,8 @@ export default class ShimoBroadcastChannel {
   /**
    * 发出一条消息到 channel
    *
-   * @param message 消息
-   * @param context 消息的上下文，传了则只有相同上下文 audience 的监听器才能收到消息
+   * @param message - 消息
+   * @param context - 消息的上下文，传了则只有相同上下文 audience 的监听器才能收到消息
    */
   async postMessage (message: unknown, context?: BaseContext): Promise<void> {
     debug('pre postMessage', { message, context })
@@ -275,7 +277,7 @@ export default class ShimoBroadcastChannel {
    * 在当前 channel 实例里分发消息，不会分发到其它 channel 实例。
    * 一般在 BroadcastChannel 收到消息后，由内部调用，外部调用主要用于类似 cross-origin window 的场景，将收到的消息转入 channel 内部处理。
    *
-   * @param messageEvent 消息
+   * @param messageEvent - 消息
    */
   async distributeMessage (messageEvent: ShimoMessageEvent): Promise<void> {
     if (
@@ -341,7 +343,7 @@ export default class ShimoBroadcastChannel {
 
       await this.postMessage(
         data,
-        assign({}, ctx, { type: ContextType.InvokeResponse })
+        Object.assign({}, ctx, { type: ContextType.InvokeResponse })
       )
 
       // Invoke 请求只处理第一个匹配的 handler
@@ -365,16 +367,16 @@ export default class ShimoBroadcastChannel {
   }
 
   private mergeContexts (contexts: Array<BaseContext | Context>): Context {
-    return assign({ channelId: this.id }, ...contexts)
+    return Object.assign({ channelId: this.id }, ...contexts)
   }
 
   /**
-   * 发出一条 Invoke 消息，并等待返回结果
-   * Invoke 消息并不会被监听，只会被发送到 channel 中通过 addInvokeHandler 添加的 handler 中。
+   * 发出一条 Invoke 消息，等待并返回接收到的结果。多个频道响应同一个 Invoke 调用时，只会返回第一个收到的结果。
+   * Invoke 消息并不会触发 `message` 等事件，只会被发送到 channel 中通过 addInvokeHandler 添加的 handler 中。
    *
-   * @parma name 方法名
-   * @param args 参数列表
-   * @param context 消息上下文
+   * @param name - 方法名
+   * @param args - 参数列表
+   * @param context - 消息上下文
    */
   async invoke<T>(
     name: string,
@@ -422,7 +424,7 @@ export default class ShimoBroadcastChannel {
 
     await this.postMessage(
       data,
-      assign({}, context, {
+      Object.assign({}, context, {
         messageId: ctxId,
         timeout,
         type: ContextType.InvokeRequest
@@ -438,6 +440,13 @@ export default class ShimoBroadcastChannel {
     return result
   }
 
+  /**
+   * 添加 Invoke 处理器。
+   *
+   * @param name - 方法名
+   * @param handler - 处理器
+   * @param context - 消息上下文
+   */
   addInvokeHandler (
     name: string,
     handler: InvokeHandler,
@@ -452,6 +461,13 @@ export default class ShimoBroadcastChannel {
     this.invokeHandlers.set(name, items)
   }
 
+  /**
+   * 删除 `name`、`handler` 和 `context.audience` 匹配的 Invoke 处理器。
+   *
+   * @param name - 方法名
+   * @param handler - 处理器
+   * @param context - 消息上下文
+   */
   removeInvokeHandler (
     name: string,
     handler: InvokeHandler,
@@ -474,7 +490,7 @@ export default class ShimoBroadcastChannel {
   /**
    * 是否开启 debug 模式。
    *
-   * @param enable 是否开启 debug 模式。
+   * @param enable - 是否开启 debug 模式。
    */
   set debug (enable: boolean) {
     toggleDebug(enable)
