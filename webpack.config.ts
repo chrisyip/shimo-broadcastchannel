@@ -7,7 +7,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 const config: Configuration = {
   mode: isProduction ? 'production' : 'development',
-  devtool: isProduction ? 'source-map' : 'inline-source-map',
+  devtool: isProduction ? undefined : 'inline-source-map',
   entry: {
     'shimo-broadcast-channel': './src/index'
   },
@@ -24,7 +24,8 @@ const config: Configuration = {
     extensions: ['.ts', '.js']
   },
   output: {
-    path: path.join(__dirname, 'dist')
+    path: path.join(__dirname, 'dist'),
+    libraryTarget: 'commonjs2'
   },
   plugins: [
     new CleanWebpackPlugin(),
