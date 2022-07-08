@@ -1,5 +1,11 @@
 shimo-broadcast-channel / [Exports](modules.md)
 
+# ShimoBroadcastChannel
+
+基于 [BroadcastChannel]() 封装了一个更易用的通信库。
+
+兼容 Chrome、IE 11、Firefox 和 Safari，但需要 `Object.assign()`，在 IE 11 下使用需要引入 polyfill。
+
 # Usage
 
 ```typescript
@@ -11,9 +17,12 @@ const channel = new ShimoBroadcastChannel({
 
 await channel.postMessage('message')
 
-channel.on('message', (msg) => {
-  // ...
+channel.on('message', (msg: ShimoMessageEvent) => {
+  handleMessageData(msg.data)
 })
+
+// 直接从其他频道取回值
+const myValue = await channel.invoke('my_method', [arg1, arg2, ...])
 ```
 
 ## Context
@@ -57,7 +66,7 @@ const channel = new ShimoBroadcastChannel({
 })
 
 // 监听 postMessage 事件，把消息通过其他方式发出去
-channel.on('postMessage', (event: ShimoMessageEvent) => {
+channel.on('postMessage', (evt: ShimoMessageEvent) => {
   iframe.contentWindow.postMessage(evt, '*')
 })
 
@@ -74,8 +83,8 @@ channel.addInvokeHandler('greeting', (name: string) => {
   return `Hello, ${name}`
 })
 
-channel.on('message', (msg) => {
-  console.log(msg) // 'Hello, John'
+channel.on('message', (evt: ShimoMessageEvent) => {
+  console.log(evt.data) // 'Hello, John'
 })
 ```
 
@@ -105,10 +114,10 @@ window.addEventListener('message', (evt: MessageEvent) => {
   }
 })
 
-channel.invoke('greeting', ['John']).then((msg: ShimoMessageEvent) => {
-  console.log(msg.data) // 'Hello, John'
+channel.invoke('greeting', ['John']).then((msg: string) => {
+  console.log(msg) // 'Hello, John'
 
-  channel.postMessage(msg.data)
+  channel.postMessage(msg)
 })
 ```
 
@@ -120,6 +129,11 @@ const channel = new ShimoBroadcastChannel()
 const cache = new SomeCache({ ttl: CACHE_TTL })
 
 channel.onMessageArrive = async (evt: ShimoMessageEvent) => {
+  // 抛弃超过缓存时间后收到的旧消息
+  if (Date.now() - evt.time > CACHE_TTL) {
+    return
+  }
+
   // 消息在 cache 中说明被处理过
   if (await cache.has(evt.id)) {
     return

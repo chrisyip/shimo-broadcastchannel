@@ -33,7 +33,7 @@
 
 #### Defined in
 
-src/message-event.ts:32
+src/message-event.ts:31
 
 ## Properties
 
@@ -43,7 +43,7 @@ src/message-event.ts:32
 
 #### Defined in
 
-src/message-event.ts:30
+src/message-event.ts:29
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 #### Defined in
 
-src/message-event.ts:21
+src/message-event.ts:20
 
 ___
 
@@ -65,7 +65,7 @@ The data sent by the message emitter.
 
 #### Defined in
 
-src/message-event.ts:20
+src/message-event.ts:19
 
 ___
 
@@ -75,7 +75,7 @@ ___
 
 #### Defined in
 
-src/message-event.ts:29
+src/message-event.ts:28
 
 ___
 
@@ -87,7 +87,7 @@ The ID of the message.
 
 #### Defined in
 
-src/message-event.ts:26
+src/message-event.ts:25
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 #### Defined in
 
-src/message-event.ts:28
+src/message-event.ts:27
 
 ___
 
@@ -107,7 +107,7 @@ ___
 
 #### Defined in
 
-src/message-event.ts:27
+src/message-event.ts:26
 
 ___
 
@@ -117,4 +117,4 @@ ___
 
 #### Defined in
 
-src/message-event.ts:22
+src/message-event.ts:21

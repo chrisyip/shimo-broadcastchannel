@@ -21,7 +21,7 @@
 
 #### Defined in
 
-src/message-event.ts:13
+src/message-event.ts:12
 
 ___
 
@@ -31,7 +31,7 @@ ___
 
 #### Defined in
 
-src/message-event.ts:9
+src/message-event.ts:8
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 #### Defined in
 
-src/message-event.ts:8
+src/message-event.ts:7
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-src/message-event.ts:12
+src/message-event.ts:11
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-src/message-event.ts:11
+src/message-event.ts:10
 
 ___
 
@@ -71,4 +71,4 @@ ___
 
 #### Defined in
 
-src/message-event.ts:10
+src/message-event.ts:9

@@ -21,7 +21,7 @@ Invoke 调用的响应结果
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:601
+src/shimo-broadcast-channel.ts:617
 
 ___
 
@@ -33,4 +33,4 @@ Invoke 调用相应的错误，Firefox 不支持返回 Error，会转换为 stri
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:606
+src/shimo-broadcast-channel.ts:622

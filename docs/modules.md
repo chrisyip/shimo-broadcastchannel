@@ -73,7 +73,7 @@
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:515
+src/shimo-broadcast-channel.ts:531
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:494
+src/shimo-broadcast-channel.ts:510
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:524
+src/shimo-broadcast-channel.ts:540
 
 ___
 
@@ -143,7 +143,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:491
+src/shimo-broadcast-channel.ts:507
 
 ___
 
@@ -161,7 +161,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:522
+src/shimo-broadcast-channel.ts:538
 
 ___
 
@@ -189,7 +189,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:22
+src/shimo-broadcast-channel.ts:21
 
 ## Variables
 
@@ -209,7 +209,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:15
+src/shimo-broadcast-channel.ts:14
 
 ___
 
@@ -239,7 +239,7 @@ src/constants.ts:1
 
 #### Defined in
 
-src/message-event.ts:98
+src/message-event.ts:97
 
 ___
 
@@ -267,4 +267,4 @@ https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clon
 
 #### Defined in
 
-src/structured-clone.ts:22
+src/structured-clone.ts:21

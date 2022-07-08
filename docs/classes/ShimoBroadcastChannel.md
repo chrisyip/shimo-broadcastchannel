@@ -55,7 +55,7 @@
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:55
+src/shimo-broadcast-channel.ts:57
 
 ## Properties
 
@@ -67,7 +67,7 @@ src/shimo-broadcast-channel.ts:55
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:39
+src/shimo-broadcast-channel.ts:41
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:41
+src/shimo-broadcast-channel.ts:43
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:43
+src/shimo-broadcast-channel.ts:45
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:53
+src/shimo-broadcast-channel.ts:55
 
 ___
 
@@ -107,7 +107,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:48
+src/shimo-broadcast-channel.ts:50
 
 ___
 
@@ -115,9 +115,11 @@ ___
 
 • `Readonly` **id**: `string`
 
+Channel ID，ID 一致才能通信
+
 #### Defined in
 
-src/shimo-broadcast-channel.ts:27
+src/shimo-broadcast-channel.ts:29
 
 ___
 
@@ -127,7 +129,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:45
+src/shimo-broadcast-channel.ts:47
 
 ___
 
@@ -141,7 +143,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:34
+src/shimo-broadcast-channel.ts:36
 
 ## Accessors
 
@@ -157,7 +159,7 @@ src/shimo-broadcast-channel.ts:34
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:483
+src/shimo-broadcast-channel.ts:499
 
 • `set` **debug**(`enable`): `void`
 
@@ -175,7 +177,7 @@ src/shimo-broadcast-channel.ts:483
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:479
+src/shimo-broadcast-channel.ts:495
 
 ## Methods
 
@@ -197,7 +199,7 @@ src/shimo-broadcast-channel.ts:479
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:123
+src/shimo-broadcast-channel.ts:125
 
 ___
 
@@ -205,13 +207,15 @@ ___
 
 ▸ **addInvokeHandler**(`name`, `handler`, `context?`): `void`
 
+添加 Invoke 处理器。
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `name` | `string` |
-| `handler` | [`InvokeHandler`](../modules.md#invokehandler) |
-| `context?` | [`BaseContext`](../interfaces/BaseContext.md) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `name` | `string` | 方法名 |
+| `handler` | [`InvokeHandler`](../modules.md#invokehandler) | 处理器 |
+| `context?` | [`BaseContext`](../interfaces/BaseContext.md) | 消息上下文 |
 
 #### Returns
 
@@ -219,7 +223,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:441
+src/shimo-broadcast-channel.ts:450
 
 ___
 
@@ -242,7 +246,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:280
+src/shimo-broadcast-channel.ts:282
 
 ___
 
@@ -270,7 +274,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:212
+src/shimo-broadcast-channel.ts:214
 
 ___
 
@@ -292,7 +296,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:317
+src/shimo-broadcast-channel.ts:319
 
 ___
 
@@ -314,7 +318,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:357
+src/shimo-broadcast-channel.ts:359
 
 ___
 
@@ -334,7 +338,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:98
+src/shimo-broadcast-channel.ts:100
 
 ___
 
@@ -342,10 +346,8 @@ ___
 
 ▸ **invoke**<`T`\>(`name`, `args`, `context?`): `Promise`<`T`\>
 
-发出一条 Invoke 消息，并等待返回结果
-Invoke 消息并不会被监听，只会被发送到 channel 中通过 addInvokeHandler 添加的 handler 中。
-
-**`parma`** name 方法名
+发出一条 Invoke 消息，等待并返回接收到的结果。多个频道响应同一个 Invoke 调用时，只会返回第一个收到的结果。
+Invoke 消息并不会触发 `message` 等事件，只会被发送到 channel 中通过 addInvokeHandler 添加的 handler 中。
 
 #### Type parameters
 
@@ -357,7 +359,7 @@ Invoke 消息并不会被监听，只会被发送到 channel 中通过 addInvoke
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `name` | `string` | - |
+| `name` | `string` | 方法名 |
 | `args` | `unknown`[] | 参数列表 |
 | `context?` | [`BaseContext`](../interfaces/BaseContext.md) | 消息上下文 |
 
@@ -367,7 +369,7 @@ Invoke 消息并不会被监听，只会被发送到 channel 中通过 addInvoke
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:379
+src/shimo-broadcast-channel.ts:381
 
 ___
 
@@ -387,7 +389,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:367
+src/shimo-broadcast-channel.ts:369
 
 ___
 
@@ -417,7 +419,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:187
+src/shimo-broadcast-channel.ts:189
 
 ___
 
@@ -447,7 +449,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:143
+src/shimo-broadcast-channel.ts:145
 
 ___
 
@@ -477,7 +479,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:162
+src/shimo-broadcast-channel.ts:164
 
 ___
 
@@ -500,7 +502,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:235
+src/shimo-broadcast-channel.ts:237
 
 ___
 
@@ -508,13 +510,15 @@ ___
 
 ▸ **removeInvokeHandler**(`name`, `handler`, `context?`): `void`
 
+删除 `name`、`handler` 和 `context.audience` 匹配的 Invoke 处理器。
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `name` | `string` |
-| `handler` | [`InvokeHandler`](../modules.md#invokehandler) |
-| `context?` | [`BaseContext`](../interfaces/BaseContext.md) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `name` | `string` | 方法名 |
+| `handler` | [`InvokeHandler`](../modules.md#invokehandler) | 处理器 |
+| `context?` | [`BaseContext`](../interfaces/BaseContext.md) | 消息上下文 |
 
 #### Returns
 
@@ -522,7 +526,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:455
+src/shimo-broadcast-channel.ts:471
 
 ___
 
@@ -548,4 +552,4 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:119
+src/shimo-broadcast-channel.ts:121
