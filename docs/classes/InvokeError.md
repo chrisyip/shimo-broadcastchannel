@@ -32,21 +32,21 @@
 
 ### constructor
 
-• **new InvokeError**(`message?`)
+• **new InvokeError**(`message`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `message?` | `string` |
+| `message` | `string` |
 
-#### Inherited from
+#### Overrides
 
 Error.constructor
 
 #### Defined in
 
-node_modules/typescript/lib/lib.es5.d.ts:1028
+src/errors.ts:30
 
 ## Properties
 
@@ -56,7 +56,7 @@ node_modules/typescript/lib/lib.es5.d.ts:1028
 
 #### Defined in
 
-src/errors.ts:12
+src/errors.ts:28
 
 ___
 
@@ -80,21 +80,21 @@ ___
 
 #### Defined in
 
-src/errors.ts:11
+src/errors.ts:27
 
 ___
 
 ### name
 
-• **name**: `string`
+• **name**: `string` = `'InvokeError'`
 
-#### Inherited from
+#### Overrides
 
 Error.name
 
 #### Defined in
 
-node_modules/typescript/lib/lib.es5.d.ts:1022
+src/errors.ts:26
 
 ___
 

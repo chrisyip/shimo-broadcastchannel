@@ -32,21 +32,21 @@
 
 ### constructor
 
-• **new MessageError**(`message?`)
+• **new MessageError**(`message`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `message?` | `string` |
+| `message` | `string` |
 
-#### Inherited from
+#### Overrides
 
 Error.constructor
 
 #### Defined in
 
-node_modules/typescript/lib/lib.es5.d.ts:1028
+src/errors.ts:8
 
 ## Properties
 
@@ -56,7 +56,7 @@ node_modules/typescript/lib/lib.es5.d.ts:1028
 
 #### Defined in
 
-src/errors.ts:5
+src/errors.ts:6
 
 ___
 
@@ -76,15 +76,15 @@ ___
 
 ### name
 
-• **name**: `string`
+• **name**: `string` = `'MessageError'`
 
-#### Inherited from
+#### Overrides
 
 Error.name
 
 #### Defined in
 
-node_modules/typescript/lib/lib.es5.d.ts:1022
+src/errors.ts:4
 
 ___
 
@@ -94,7 +94,7 @@ ___
 
 #### Defined in
 
-src/errors.ts:4
+src/errors.ts:5
 
 ___
 

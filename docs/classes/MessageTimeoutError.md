@@ -30,21 +30,21 @@
 
 ### constructor
 
-• **new MessageTimeoutError**(`message?`)
+• **new MessageTimeoutError**(`message`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `message?` | `string` |
+| `message` | `string` |
 
-#### Inherited from
+#### Overrides
 
 Error.constructor
 
 #### Defined in
 
-node_modules/typescript/lib/lib.es5.d.ts:1028
+src/errors.ts:18
 
 ## Properties
 
@@ -64,15 +64,15 @@ ___
 
 ### name
 
-• **name**: `string`
+• **name**: `string` = `'MessageTimeoutError'`
 
-#### Inherited from
+#### Overrides
 
 Error.name
 
 #### Defined in
 
-node_modules/typescript/lib/lib.es5.d.ts:1022
+src/errors.ts:16
 
 ___
 
