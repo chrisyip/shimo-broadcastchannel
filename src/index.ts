@@ -10,6 +10,4 @@ export * from './structured-clone'
 
 export * from './constants'
 
-export { DEBUG_NAMESPACE } from './debug'
-
 export { ShimoBroadcastChannel, Options }

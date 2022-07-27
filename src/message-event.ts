@@ -56,7 +56,9 @@ export class ShimoMessageEvent {
       },
       id: {
         enumerable: true,
-        value: ctx.messageId
+        get () {
+          return ctx.messageId
+        }
       },
       source: {
         enumerable: true,
@@ -72,7 +74,9 @@ export class ShimoMessageEvent {
       },
       channelId: {
         enumerable: true,
-        value: channelId
+        get () {
+          return ctx.channelId
+        }
       }
     })
 

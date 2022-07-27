@@ -1,4 +1,5 @@
 import isPlainObject from 'is-plain-obj'
+import { ShimoMessageEvent } from './message-event'
 
 function isInstanceOf (target: unknown, prototype: any): boolean {
   try {
@@ -40,7 +41,8 @@ export function structuredClone (
     value instanceof Date ||
     value instanceof RegExp ||
     value instanceof Boolean ||
-    value instanceof String
+    value instanceof String ||
+    value instanceof ShimoMessageEvent
   ) {
     return value
   }
