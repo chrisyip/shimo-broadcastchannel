@@ -344,12 +344,12 @@ export default class ShimoBroadcastChannel {
    * 响应其他 channel 发送的 Invoke 调用
    */
   private async handleInvokeRequest (messageEvent: ShimoMessageEvent): Promise<void> {
-    if (!isPlainObject(messageEvent.data == null)) {
+    if (!isPlainObject(messageEvent.data)) {
       this.log('invalid invoke request', messageEvent)
       throw new Error('InvokeRequest data must be an object')
     }
 
-    const { name, args } = messageEvent.data as InvokeData
+    const { name, args } = (messageEvent.data as unknown) as InvokeData
     const handlers = this.invokeHandlers.get(name)
 
     this.log('handle invoke request', {
