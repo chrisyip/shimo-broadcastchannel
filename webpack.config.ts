@@ -25,7 +25,7 @@ const config: Configuration = {
   },
   output: {
     path: path.join(__dirname, 'dist'),
-    libraryTarget: 'commonjs2'
+    libraryTarget: 'umd'
   },
   plugins: [
     new CleanWebpackPlugin(),
