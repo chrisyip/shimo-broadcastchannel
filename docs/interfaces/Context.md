@@ -28,7 +28,7 @@
 
 • `Optional` **audience**: `string`
 
-消息的受众，会和 listener 的 context.audience 对比。
+消息的受众，会和 listener 的 context.audience 对比。'*' 代表任意 audience，undefined 也是一个合法的 audience。
 
 #### Inherited from
 
@@ -36,7 +36,7 @@
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:572
+src/shimo-broadcast-channel.ts:643
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:591
+src/shimo-broadcast-channel.ts:662
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:596
+src/shimo-broadcast-channel.ts:667
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:577
+src/shimo-broadcast-channel.ts:648
 
 ___
 
@@ -88,4 +88,4 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:601
+src/shimo-broadcast-channel.ts:672

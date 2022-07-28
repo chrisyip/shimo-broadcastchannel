@@ -73,7 +73,7 @@
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:531
+src/shimo-broadcast-channel.ts:594
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:510
+src/shimo-broadcast-channel.ts:573
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:540
+src/shimo-broadcast-channel.ts:603
 
 ___
 
@@ -143,7 +143,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:507
+src/shimo-broadcast-channel.ts:570
 
 ___
 
@@ -161,7 +161,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:538
+src/shimo-broadcast-channel.ts:601
 
 ___
 
@@ -189,17 +189,17 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:21
+src/shimo-broadcast-channel.ts:24
 
 ## Variables
 
 ### DEBUG\_NAMESPACE
 
-• `Const` **DEBUG\_NAMESPACE**: ``"SM_CHANNEL"``
+• `Const` **DEBUG\_NAMESPACE**: ``"SM_CHAN"``
 
 #### Defined in
 
-src/debug.ts:3
+src/shimo-broadcast-channel.ts:17
 
 ___
 
@@ -209,7 +209,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:14
+src/shimo-broadcast-channel.ts:15
 
 ___
 
@@ -239,7 +239,7 @@ src/constants.ts:1
 
 #### Defined in
 
-src/message-event.ts:97
+src/message-event.ts:101
 
 ___
 
@@ -267,4 +267,4 @@ https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clon
 
 #### Defined in
 
-src/structured-clone.ts:21
+src/structured-clone.ts:22

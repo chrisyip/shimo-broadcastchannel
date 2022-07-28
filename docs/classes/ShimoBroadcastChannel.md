@@ -10,6 +10,7 @@
 
 ### Properties
 
+- [\_debugNamespace](ShimoBroadcastChannel.md#_debugnamespace)
 - [autoStructuredClone](ShimoBroadcastChannel.md#autostructuredclone)
 - [channel](ShimoBroadcastChannel.md#channel)
 - [emitter](ShimoBroadcastChannel.md#emitter)
@@ -17,11 +18,13 @@
 - [eventHandlers](ShimoBroadcastChannel.md#eventhandlers)
 - [id](ShimoBroadcastChannel.md#id)
 - [invokeHandlers](ShimoBroadcastChannel.md#invokehandlers)
+- [log](ShimoBroadcastChannel.md#log)
 - [onMessageArrive](ShimoBroadcastChannel.md#onmessagearrive)
 
 ### Accessors
 
 - [debug](ShimoBroadcastChannel.md#debug)
+- [debugNamespace](ShimoBroadcastChannel.md#debugnamespace)
 
 ### Methods
 
@@ -55,9 +58,19 @@
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:57
+src/shimo-broadcast-channel.ts:63
 
 ## Properties
+
+### \_debugNamespace
+
+• `Private` **\_debugNamespace**: `string` = `DEBUG_NAMESPACE`
+
+#### Defined in
+
+src/shimo-broadcast-channel.ts:61
+
+___
 
 ### autoStructuredClone
 
@@ -67,7 +80,7 @@ src/shimo-broadcast-channel.ts:57
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:41
+src/shimo-broadcast-channel.ts:44
 
 ___
 
@@ -77,7 +90,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:43
+src/shimo-broadcast-channel.ts:46
 
 ___
 
@@ -87,7 +100,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:45
+src/shimo-broadcast-channel.ts:48
 
 ___
 
@@ -97,7 +110,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:55
+src/shimo-broadcast-channel.ts:58
 
 ___
 
@@ -107,7 +120,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:50
+src/shimo-broadcast-channel.ts:53
 
 ___
 
@@ -119,7 +132,7 @@ Channel ID，ID 一致才能通信
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:29
+src/shimo-broadcast-channel.ts:32
 
 ___
 
@@ -129,7 +142,17 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:47
+src/shimo-broadcast-channel.ts:50
+
+___
+
+### log
+
+• `Private` **log**: `Debugger`
+
+#### Defined in
+
+src/shimo-broadcast-channel.ts:60
 
 ___
 
@@ -143,7 +166,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:36
+src/shimo-broadcast-channel.ts:39
 
 ## Accessors
 
@@ -159,7 +182,7 @@ src/shimo-broadcast-channel.ts:36
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:499
+src/shimo-broadcast-channel.ts:537
 
 • `set` **debug**(`enable`): `void`
 
@@ -177,7 +200,37 @@ src/shimo-broadcast-channel.ts:499
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:495
+src/shimo-broadcast-channel.ts:533
+
+___
+
+### debugNamespace
+
+• `get` **debugNamespace**(): `string`
+
+#### Returns
+
+`string`
+
+#### Defined in
+
+src/shimo-broadcast-channel.ts:553
+
+• `set` **debugNamespace**(`ns`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ns` | `string` |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+src/shimo-broadcast-channel.ts:541
 
 ## Methods
 
@@ -199,7 +252,7 @@ src/shimo-broadcast-channel.ts:495
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:125
+src/shimo-broadcast-channel.ts:136
 
 ___
 
@@ -223,7 +276,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:450
+src/shimo-broadcast-channel.ts:488
 
 ___
 
@@ -246,13 +299,15 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:282
+src/shimo-broadcast-channel.ts:307
 
 ___
 
 ### emit
 
 ▸ **emit**<`Name`\>(`name`, `data`, `context?`): `void`
+
+触发事件
 
 #### Type parameters
 
@@ -262,11 +317,11 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `name` | `Name` |
-| `data` | [`Events`](../modules.md#events)[`Name`] |
-| `context?` | [`Context`](../interfaces/Context.md) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `name` | `Name` | 事件名称 |
+| `data` | [`Events`](../modules.md#events)[`Name`] | 事件数据 |
+| `context?` | [`Context`](../interfaces/Context.md) | 监听的消息的上下文，传了则会对比监听器的 audience，一致或任意一方 audience 为 '*' 时，会触发监听器。 |
 
 #### Returns
 
@@ -274,7 +329,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:214
+src/shimo-broadcast-channel.ts:237
 
 ___
 
@@ -296,7 +351,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:319
+src/shimo-broadcast-channel.ts:346
 
 ___
 
@@ -318,7 +373,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:359
+src/shimo-broadcast-channel.ts:395
 
 ___
 
@@ -338,7 +393,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:100
+src/shimo-broadcast-channel.ts:107
 
 ___
 
@@ -369,7 +424,7 @@ Invoke 消息并不会触发 `message` 等事件，只会被发送到 channel �
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:381
+src/shimo-broadcast-channel.ts:417
 
 ___
 
@@ -389,7 +444,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:369
+src/shimo-broadcast-channel.ts:405
 
 ___
 
@@ -397,7 +452,7 @@ ___
 
 ▸ **off**<`Name`\>(`name`, `listener?`, `context?`): `void`
 
-取消事件监听
+删除事件监听
 
 #### Type parameters
 
@@ -410,8 +465,8 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `name` | `Name` | 事件名称 |
-| `listener?` | [`EventHandler`](../modules.md#eventhandler)<[`Events`](../modules.md#events)[`Name`]\> | 监听器，不传则取消所有监听器 |
-| `context?` | [`BaseContext`](../interfaces/BaseContext.md) | 监听的消息的上下文，传了则只取消相同上下文 audience 的监听器 |
+| `listener?` | [`EventHandler`](../modules.md#eventhandler)<[`Events`](../modules.md#events)[`Name`]\> | 监听器，不传则删除所有监听器 |
+| `context?` | [`BaseContext`](../interfaces/BaseContext.md) | 监听的消息的上下文，传了则只删除相同上下文 audience 的监听器，audience === '*' 时删除所有监听器 |
 
 #### Returns
 
@@ -419,7 +474,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:189
+src/shimo-broadcast-channel.ts:200
 
 ___
 
@@ -449,7 +504,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:145
+src/shimo-broadcast-channel.ts:156
 
 ___
 
@@ -479,7 +534,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:164
+src/shimo-broadcast-channel.ts:175
 
 ___
 
@@ -502,7 +557,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:237
+src/shimo-broadcast-channel.ts:261
 
 ___
 
@@ -526,7 +581,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:471
+src/shimo-broadcast-channel.ts:509
 
 ___
 
@@ -552,4 +607,4 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:121
+src/shimo-broadcast-channel.ts:128

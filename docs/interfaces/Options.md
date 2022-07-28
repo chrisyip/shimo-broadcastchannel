@@ -9,6 +9,7 @@
 - [autoStructuredClone](Options.md#autostructuredclone)
 - [channelId](Options.md#channelid)
 - [debug](Options.md#debug)
+- [debugNamespace](Options.md#debugnamespace)
 
 ## Properties
 
@@ -20,7 +21,7 @@
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:560
+src/shimo-broadcast-channel.ts:631
 
 ___
 
@@ -30,7 +31,7 @@ ___
 
 #### Defined in
 
-src/shimo-broadcast-channel.ts:553
+src/shimo-broadcast-channel.ts:616
 
 ___
 
@@ -38,6 +39,20 @@ ___
 
 • `Optional` **debug**: `boolean`
 
+是否启用 debug 输出
+
 #### Defined in
 
-src/shimo-broadcast-channel.ts:555
+src/shimo-broadcast-channel.ts:621
+
+___
+
+### debugNamespace
+
+• `Optional` **debugNamespace**: `string`
+
+修改 debug 的命名空间
+
+#### Defined in
+
+src/shimo-broadcast-channel.ts:626
