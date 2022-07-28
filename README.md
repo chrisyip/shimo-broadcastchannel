@@ -29,7 +29,7 @@ Context 是用于传递和消息有关的上下文，在消息传递时会保留
 
 `Context.audiecen: string`
 
-用于限定消息听众，比如 `channel.postMessage(msg, { audience: 'a' })`：
+用于限定消息听众，比如 `channel.postMessage(msg, { audience: 'a' })`，以便过滤消息处理器：
 
 - `on('message', fn, { audience: 'a' })` 会收到消息
 - `on('message', fn, { audience: 'b' })` 不会收到消息
@@ -42,6 +42,8 @@ Context 是用于传递和消息有关的上下文，在消息传递时会保留
 - `addInvokeHandler(method, fn, { audience: 'b' })` 不会收到消息
 - `addInvokeHandler(method, fn, { audience: '' })` 不会收到消息
 - `addInvokeHandler(method, fn)` 不会收到消息
+
+传入 `'*'` 则会忽略收到消息的 `audience`，不进行过滤。
 
 ## BroadcastChannel 无法使用时
 
