@@ -1,6 +1,6 @@
 {
   "name": "shimo-broadcast-channel",
-  "version": "1.0.0-5",
+  "version": "1.0.0",
   "description": "",
   "main": "dist/shimo-broadcast-channel.js",
   "scripts": {
