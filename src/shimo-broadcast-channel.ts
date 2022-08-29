@@ -1,4 +1,4 @@
-import { BroadcastChannel } from 'broadcast-channel'
+import { BroadcastChannel, BroadcastChannelOptions } from 'broadcast-channel'
 import { v4 as uuid } from 'uuid'
 import { TinyEmitter } from 'tiny-emitter'
 import { assert } from './assert'
@@ -79,7 +79,7 @@ export default class ShimoBroadcastChannel {
 
     this.emitter = new TinyEmitter()
 
-    const channel = new BroadcastChannel(this.id)
+    const channel = new BroadcastChannel(this.id, options.broadcastChannelOptions)
     channel.addEventListener('message', (evt) => {
       ;(async () => {
         let data: ShimoMessageEvent
@@ -629,6 +629,12 @@ export interface Options {
    * 是否启用自动 structuredClone 在发送前对数据进行处理
    */
   autoStructuredClone?: boolean
+
+  /**
+   * BroadcastChannel 的第二个参数
+   * @link https://github.com/pubkey/broadcast-channel#set-options-when-creating-a-channel-optional
+   */
+  broadcastChannelOptions?: BroadcastChannelOptions
 }
 
 /**
