@@ -7,6 +7,7 @@
 ### Properties
 
 - [autoStructuredClone](Options.md#autostructuredclone)
+- [broadcastChannelOptions](Options.md#broadcastchanneloptions)
 - [channelId](Options.md#channelid)
 - [debug](Options.md#debug)
 - [debugNamespace](Options.md#debugnamespace)
@@ -22,6 +23,20 @@
 #### Defined in
 
 src/shimo-broadcast-channel.ts:631
+
+___
+
+### broadcastChannelOptions
+
+• `Optional` **broadcastChannelOptions**: `BroadcastChannelOptions`
+
+BroadcastChannel 的第二个参数
+
+**`link`** https://github.com/pubkey/broadcast-channel#set-options-when-creating-a-channel-optional
+
+#### Defined in
+
+src/shimo-broadcast-channel.ts:637
 
 ___
 
