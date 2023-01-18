@@ -23,6 +23,7 @@
 - [InvokeResponsePayload](interfaces/InvokeResponsePayload.md)
 - [MessageEventOptions](interfaces/MessageEventOptions.md)
 - [Options](interfaces/Options.md)
+- [ShimoMessageEventLike](interfaces/ShimoMessageEventLike.md)
 
 ### Type aliases
 
@@ -225,7 +226,7 @@ src/constants.ts:1
 
 ### isShimoMessageEventLike
 
-▸ **isShimoMessageEventLike**(`input`): `boolean`
+▸ **isShimoMessageEventLike**(`input`): input is ShimoMessageEventLike
 
 #### Parameters
 
@@ -235,11 +236,11 @@ src/constants.ts:1
 
 #### Returns
 
-`boolean`
+input is ShimoMessageEventLike
 
 #### Defined in
 
-src/message-event.ts:101
+src/message-event.ts:103
 
 ___
 

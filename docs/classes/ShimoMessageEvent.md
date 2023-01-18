@@ -2,6 +2,12 @@
 
 # Class: ShimoMessageEvent
 
+## Hierarchy
+
+- **`ShimoMessageEvent`**
+
+  ↳ [`ShimoMessageEventLike`](../interfaces/ShimoMessageEventLike.md)
+
 ## Table of contents
 
 ### Constructors
