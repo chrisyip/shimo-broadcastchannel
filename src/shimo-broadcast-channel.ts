@@ -319,7 +319,7 @@ export default class ShimoBroadcastChannel {
     if (typeof this.onMessageArrive === 'function') {
       const event = await this.onMessageArrive(evt)
       if (!(event instanceof ShimoMessageEvent)) {
-        this.log('skip message', evt)
+        this.log('skip distributing message by `onMessageArrive`', { message: event, origin: messageEvent })
         return
       }
       evt = event
