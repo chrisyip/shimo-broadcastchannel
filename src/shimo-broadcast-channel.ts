@@ -1,5 +1,4 @@
 import { BroadcastChannel, BroadcastChannelOptions } from 'broadcast-channel'
-import { v4 as uuid } from 'uuid'
 import { TinyEmitter } from 'tiny-emitter'
 import { assert } from './assert'
 import { InvokeError, MessageError, MessageTimeoutError } from './errors'
@@ -11,6 +10,7 @@ import {
 import { structuredClone } from './structured-clone'
 import debug from 'debug'
 import isPlainObject from 'is-plain-obj'
+import { uuid } from './uuid'
 
 export const INVOKE_DEFAUTL_TIMEOUT = 60000
 

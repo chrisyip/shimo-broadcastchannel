@@ -1,4 +1,4 @@
-import { v4 as uuid } from 'uuid'
+import { uuid } from './uuid'
 import { Context } from './shimo-broadcast-channel'
 import { assert } from './assert'
 import { SOURCE_NAMESPACE } from './constants'
