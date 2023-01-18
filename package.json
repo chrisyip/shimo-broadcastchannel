@@ -9,7 +9,8 @@
     "build": "webpack",
     "prepare": "husky install",
     "docs": "typedoc src/index.ts",
-    "docs-auto": "npm run docs && git add -A docs && git diff-index --quiet HEAD || git commit -m 'docs: update'"
+    "docs-auto": "npm run docs && git add -A docs && git diff-index --quiet HEAD || git commit -m 'docs: update'",
+    "test": "ava tests"
   },
   "author": "yesui <yesui@shimo.im>",
   "license": "MIT",
@@ -26,6 +27,7 @@
     "@types/uuid": "^8.3.4",
     "@types/webpack": "^5.28.0",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "ava": "^5.1.1",
     "clean-webpack-plugin": "^4.0.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.5.0",
@@ -53,5 +55,13 @@
   "files": [
     "dist"
   ],
-  "types": "dist"
+  "types": "dist",
+  "ava": {
+    "extensions": {
+      "ts": "module"
+    },
+    "nodeArguments": [
+      "--loader=ts-node/esm"
+    ]
+  }
 }

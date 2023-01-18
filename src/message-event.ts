@@ -66,7 +66,7 @@ export class ShimoMessageEvent {
       },
       origin: {
         enumerable: true,
-        value: origin ?? location.origin
+        value: origin
       },
       emitter: {
         enumerable: true,
@@ -98,10 +98,17 @@ export class ShimoMessageEvent {
   }
 }
 
-export function isShimoMessageEventLike (input: unknown): boolean {
-  return (
-    input instanceof ShimoMessageEvent ||
-    (input != null &&
-      (input as Record<string, unknown>).source === SOURCE_NAMESPACE)
-  )
+export interface ShimoMessageEventLike extends ShimoMessageEvent {}
+
+export function isShimoMessageEventLike (input: unknown): input is ShimoMessageEventLike {
+  if (input instanceof ShimoMessageEvent) {
+    return true
+  }
+
+  if (typeof input === 'object' && input != null) {
+    const obj = input as ShimoMessageEventLike
+    return obj.source === SOURCE_NAMESPACE && typeof obj.channelId === 'string' && obj.channelId.length > 0 && obj.context != null
+  }
+
+  return false
 }
